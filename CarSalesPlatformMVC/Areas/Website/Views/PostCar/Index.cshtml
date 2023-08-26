@@ -1,0 +1,553 @@
+﻿@using Domain.Entities;
+@using Application.Features.Commands.CarCommands.CreateCar;
+
+@model CreateCarCommandRequest;
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Website/Views/Shared/_websiteLayout.cshtml";
+}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+<style>
+
+    .delete-icon {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: rgba(255, 0, 0, 0.8);
+        color: white;
+        border-radius: 50%; /* Çember şekli için border-radius */
+        cursor: pointer;
+        line-height: 25px; /* Line-height ile yükseklik ve genişlik eşitlendi */
+        width: 25px;
+        height: 25px;
+        text-align: center;
+    }
+
+    .grid_listing {
+        position: relative;
+        height: 150px;
+    }
+
+    .product-listing-m {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+</style>
+
+<style>
+    .img-container {
+        width: 200px; /* istediğiniz genişlik */
+        height: 100px; /* istediğiniz yükseklik */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    .img-fluid {
+        object-fit: cover;
+        max-width: 75%;
+        max-height: 100%;
+    }
+
+</style>
+
+<style>
+    .cover-label {
+        position: absolute;
+        bottom: 0; 
+        left: 0; 
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        width: 100%; 
+        text-align: center;
+        font-size: 14px; 
+        line-height: 1.4; 
+        display: none;
+    }
+
+
+    .cover-icon {
+        color: gold;
+        cursor: pointer;
+        position: absolute;
+        bottom: 5px;
+        left: 5px;
+    }
+</style>
+
+<!--Page Header-->
+<section class="page-header profile_page">
+    <div class="container">
+        <div class="page-header_wrap">
+            <div class="page-heading">
+                <h1>Arabayı Yayınla</h1>
+            </div>
+            <ul class="coustom-breadcrumb">
+                <li><a asp-area="Website" asp-controller="Home">Anasayfa</a></li>
+                <li>Arabayı Yayınla</li>
+            </ul>
+        </div>
+    </div>
+    <!-- Dark Overlay-->
+    <div class="dark-overlay"></div>
+</section>
+<!-- /Page Header-->
+<!--Post-vehicle-->
+<section class="user_profile inner_pages">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2 col-sm-4">
+                @Html.Partial("_ProfileNavView")
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <div class="profile_wrap">
+                    <h5 class="uppercase underline">Yeni Aracı Yayınla</h5>
+                    <form id="postcar" class="needs-validation" novalidate asp-area="Website" asp-controller="PostCar" asp-action="CreateCar" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label class="control-label">Araba Adı</label>
+                            <input class="form-control white_bg" name="Car.Name" id="VehiclesTitle" type="text" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Marka Seçin</label>
+                            <div class="select">
+                                <select class="form-control white_bg" asp-for="Car.BrandId" required="required">
+                                    <option value="">Marka Seçin</option>
+                                    @foreach (var brand in ViewBag.Brands as List<Brand>)
+                                    {
+                                        <option value="@brand.Id">@brand.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Kategori Seçin</label>
+                            <div class="select">
+                                <select class="form-control white_bg" asp-for="Car.CategoryId" required>
+                                    <option value="">Kategori Seçin</option>
+                                    @foreach (var category in ViewBag.Categories as List<Category>)
+                                    {
+                                        <option value="@category.Id">@category.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Renk Seçin</label>
+                            <div class="select">
+                                <select class="form-control white_bg" asp-for="Car.ColorId" required>
+                                    <option value="">Renk Seçin</option>
+                                    @foreach (var color in ViewBag.Colors as List<Color>)
+                                    {
+
+                                        <option value="@color.Id">@color.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Yakıt türü seçin</label>
+                            <div class="select">
+                                <select class="form-control white_bg" asp-for="Car.FuelTypeId" required>
+                                    <option value="">Yakıt türü seçin</option>
+                                    @foreach (var fuelType in ViewBag.FuelTypes as List<FuelType>)
+                                    {
+
+                                        <option value="@fuelType.Id">@fuelType.Type</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Vites türü seçin</label>
+                            <div class="select">
+                                <select class="form-control white_bg" asp-for="Car.GearTypeId" required>
+                                    <option value="">Vites türü seçin</option>
+                                    @foreach (var gearType in ViewBag.GearTypes as List<GearType>)
+                                    {
+
+                                        <option value="@gearType.Id">@gearType.Type</option>
+
+                                    }
+                                </select>
+
+                            </div>
+                        </div>
+
+                        @*BAŞLIK*@
+                        <div class="form-group">
+                            <label class="control-label">Araba için başlık</label>
+                            <input class="form-control white_bg" name="Car.CarHeader" id="CarHeader" type="text" required>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="control-label">Araba için açıklama</label>
+                            <textarea name="Car.Description" class="form-control white_bg" rows="4" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Fiyat ($)</label>
+                            <input class="form-control white_bg" name="Car.Price" id="Price" type="text" required>
+                        </div>
+
+                        @*-------------------------------------------------------------*@
+                        <div class="form-group">
+                            <label class="control-label">Resim yükle ( size = 900 x 560 )</label>
+                            <div class="vehicle_images">
+                                <div class="upload_more_img">
+                                    <input id="fileInput" name="Files" type="file" multiple required>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="imagePreview" class="d-flex flex-wrap">
+
+                        </div>
+
+                        <!-- Harita için div -->
+                        <div id="map" style="height: 400px; width: 100%;"></div>
+
+
+                        <div class="gray-bg field-title">
+                            <h6>Temel Bilgiler</h6>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Model Yılı</label>
+                            <input class="form-control white_bg" name="Car.Year" id="year" type="text" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Yakıt Deposu (MAX LT)</label>
+                            <input class="form-control white_bg" name="Car.FuelTankCapacity" id="FuelTankCapacity" type="text" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">KM</label>
+                            <input class="form-control white_bg" name="Car.Mileage" id="kws" type="text" required>
+                        </div>
+                        <div class="gray-bg field-title">
+                            <h6>Teknik Özellikler</h6>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Motor Açıklaması</label>
+                            <input class="form-control white_bg" name="Car.EngineDescription" id="engien-description" type="text" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Koltuk Sayısı</label>
+                            <input class="form-control white_bg" name="Car.SeatCount" id="s-capacity" type="text" required>
+                        </div>
+                        <div class="gray-bg field-title">
+                            <h6>Aksesuarlar</h6>
+                        </div>
+                        <div class="vehicle_accessories">
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                @*<input type="hidden" name="airConditioner" value="false">*@
+                                <input id="air_conditioner" name="Car.airConditioner" type="checkbox" value="true">
+                                <label for="air_conditioner">Klima</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="door" name="Car.door" type="checkbox" value="true">
+                                <label for="door">Elektrikli Kapı Kilidi</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="antiLock" name="Car.antiLock" type="checkbox" value="true">
+                                <label for="antiLock">Anti Blokaj Fren Sistemi</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="brake" name="Car.brake" type="checkbox" value="true">
+                                <label for="brake">Fren Asistanı</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="steering" name="Car.steering" type="checkbox" value="true">
+                                <label for="steering">Hidrolik Direksiyon</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="airbag" name="Car.airbag" type="checkbox" value="true">
+                                <label for="airbag">Sürücü Hava Yastığı</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="windows" name="Car.windows" type="checkbox" value="true">
+                                <label for="windows">Elektrikli Pencereler</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="passenger_airbag" name="Car.passengerAirbag" type="checkbox" value="true">
+                                <label for="passenger_airbag">Yolcu Hava Yastığı</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="player" name="Car.player" type="checkbox" value="true">
+                                <label for="player">CD Çalar</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="sensor" name="Car.sensor" type="checkbox" value="true">
+                                <label for="sensor">Çarpışma Sensörü</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="seats" name="Car.seats" type="checkbox" value="true">
+                                <label for="seats">Deri Koltuk</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="engine_warning" name="Car.engineWarning" type="checkbox" value="true">
+                                <label for="engine_warning">Motor Kontrol Uyarısı</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="locking" name="Car.locking" type="checkbox" value="true">
+                                <label for="locking">Merkezi Kilitlenme</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="headlamps" name="Car.headlamps" type="checkbox" value="true">
+                                <label for="headlamps">Atomatik Far</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn">Arabayı İlana Ver <span class="angle_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></span></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <!-- Üçüncü sütun içeriği -->
+            </div>
+        </div>
+    </div>
+</section>
+<!--/Post-vehicle-->
+<!--Brands-->
+@Html.Partial("_PopularBrandsLayout")
+<!-- /Brands-->
+
+<script>
+    // jQuery olmadan özelleştirilmiş form denetimi
+    document.addEventListener('DOMContentLoaded', function () {
+        const forms = document.querySelectorAll('.needs-validation');
+
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+
+                form.classList.add('was-validated');
+            }, false);
+        });
+    });
+
+</script>
+
+<script>
+    // Ankara'nın koordinatlarını ve Türkiye'yi görmek için bir zoom seviyesi kullanıyoruz.
+    var map = L.map('map').setView([39.1463, 34.1599], 6);
+    var marker;
+
+    // İhtiyacınız olan lat ve lng değişkenlerini burada tanımlayın
+    var selectedLat = null;
+    var selectedLng = null;
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19
+    }).addTo(map);
+
+    map.on('click', function (e) {
+        if (marker) {
+            map.removeLayer(marker);
+        }
+        marker = L.marker(e.latlng).addTo(map);
+
+        selectedLat = e.latlng.lat;
+        selectedLng = e.latlng.lng;
+    });
+
+
+    var uploadedImageCount = 0;  // Yüklenen resim sayısını takip etmek için
+    var coverIndex = null;
+    var currentCover;
+    var imageIndices = [];
+
+    $(document).ready(function () {
+        $("#postcar").submit(function (event) {
+            event.preventDefault();
+
+            if (uploadedImageCount < 5) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'En az 5 tane fotoğraf yükleyin.',
+                });
+                return;
+            }
+
+            if (coverIndex === null) {
+                coverIndex = 0;  
+            }
+
+            formData.append('Car.CoverIndex', coverIndex);
+
+            // Form verilerini al
+            var formData = new FormData(this);
+
+            // Önceden tanımladığımız selectedLat ve selectedLng değişkenlerini kullan
+            formData.append('Car.Latitude', selectedLat);
+            formData.append('Car.Longitude', selectedLng);
+
+            // Ters coğrafi kodlama yap ve adresi güncelle
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${selectedLat}&lon=${selectedLng}`)
+                .then(response => response.json())
+                .then(data => {
+                    var address = data.address;
+                    var formattedAddress = `${address.province || ''} ${address.town || ''}`;
+
+
+                    formData.append('Car.Location', formattedAddress);
+
+                    $.ajax({
+                        url: '/PostCar/CreateCar',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            if (response.isSuccess) {
+                                Swal.fire({
+                                    position: 'top-end',
+                                    icon: 'success',
+                                    title: 'Arabayı yayınladınız.',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                }).then((result) => {
+                                    window.location.href = "/MyCars";
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Lütfen bilgilerinizi kontrol edin',
+                                });
+                            }
+                        },
+                        error: function (error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Bir hata oluştu, lütfen daha sonra tekrar deneyin.'
+                            });
+                            console.error("Form gönderilirken bir hata oluştu.", error);
+                        }
+                    });
+                });
+        });
+    });
+
+
+    function createImagePreviewForFile(file) {
+
+        var currentImageIndex = uploadedImageCount;
+        imageIndices.push(currentImageIndex);
+
+
+        var outerDiv = document.createElement('div');
+        outerDiv.className = 'col-md-3 grid_listing m-0 p-2 d-flex align-items-center position-relative';
+
+        var innerDiv = document.createElement('div');
+        innerDiv.className = 'product-listing-m gray-bg d-flex justify-content-center flex-column align-items-center';
+
+        var imgContainer = document.createElement('div');
+        imgContainer.className = 'img-container';
+
+        var img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.className = 'img-fluid';
+
+        var deleteIcon = document.createElement('span');
+        deleteIcon.innerHTML = '<i class="fa fa-times"></i>';
+        deleteIcon.classList.add('delete-icon');
+        // Resmi silmek için bir fonksiyon.
+        deleteIcon.onclick = function () {
+            outerDiv.remove();
+            uploadedImageCount--;
+            var indexToRemove = imageIndices.indexOf(currentImageIndex); // Silinecek fotoğrafın indeksini bulun.
+            if (indexToRemove > -1) {
+                imageIndices.splice(indexToRemove, 1); // İndeksi diziden kaldırın.
+            }
+            if (coverIndex === currentImageIndex) { // Eğer silinen fotoğraf kapak fotoğrafı ise, kapak fotoğrafını da sıfırlayın.
+                coverIndex = null;
+                currentCover = null;
+            }
+        };
+
+        var coverLabel = document.createElement('span');
+        coverLabel.innerHTML = 'Kapak Fotoğrafı';
+        coverLabel.classList.add('cover-label');
+
+        var coverIcon = document.createElement('span');
+        coverIcon.innerHTML = '<i class="fa fa-heart"></i>';
+        coverIcon.classList.add('cover-icon');
+        coverIcon.onclick = function () {
+            if (currentCover) {
+                currentCover.style.display = 'none';
+                currentCover.remove();
+            }
+            coverLabel.style.display = 'block';
+            outerDiv.appendChild(coverLabel);
+            currentCover = coverLabel;
+
+            coverIndex = currentImageIndex; // Kapak fotoğrafının indeksini burada saklıyoruz
+        };
+
+
+        imgContainer.appendChild(img);
+        innerDiv.appendChild(imgContainer);
+        innerDiv.appendChild(deleteIcon);
+        innerDiv.appendChild(coverIcon);
+        outerDiv.appendChild(innerDiv);
+        innerDiv.appendChild(coverLabel);
+
+        return outerDiv;
+    }
+
+
+    function createImagePreviewForURL(url) {
+        var imagePreviewContainer = document.createElement('div');
+        imagePreviewContainer.classList.add('image-preview-container');
+
+        var img = document.createElement('img');
+        img.src = '/images/' + url;
+        img.classList.add('image-preview');
+
+        var deleteIcon = document.createElement('span');
+        deleteIcon.innerHTML = '<i class="fa fa-times"></i>';
+        deleteIcon.classList.add('delete-icon');
+        deleteIcon.onclick = function () {
+            imagePreviewContainer.remove();
+            uploadedImageCount--;
+        };
+
+        imagePreviewContainer.appendChild(img);
+        imagePreviewContainer.appendChild(deleteIcon);
+
+        return imagePreviewContainer;
+    }
+
+    document.getElementById('fileInput').addEventListener('change', function (event) {
+        var imagePreview = document.getElementById('imagePreview');
+
+        for (var i = 0; i < event.target.files.length; i++) {
+            var file = event.target.files[i];
+            if (file.type.match('image/jpeg') || file.type.match('image/png')) {
+                if (uploadedImageCount >= 20) {
+                    alert("En fazla 20 resim yükleyebilirsiniz.");
+                    return;
+                }
+
+                var imagePreviewContainer = createImagePreviewForFile(file);
+                imagePreview.appendChild(imagePreviewContainer);
+
+                uploadedImageCount++;
+            } else {
+                alert("Yalnızca JPG ve PNG formatında resim yükleyebilirsiniz.");
+            }
+        }
+    });
+</script>
+

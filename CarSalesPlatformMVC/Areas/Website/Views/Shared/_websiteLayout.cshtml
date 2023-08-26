@@ -1,0 +1,501 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <!-- Scripts -->
+    <script src="~/Website/assets/js/jquery.min.js"></script>
+    <script src="~/Website/assets/js/bootstrap.min.js"></script>
+    <script src="~/Website/assets/js/interface.js"></script>
+    <script src="~/Website/assets/js/31f5977fdc.js"></script>
+    <!--Switcher-->
+    <script src="~/Website/assets/switcher/js/switcher.js"></script>
+    <!--bootstrap-slider-JS-->
+    <script src="~/Website/assets/js/bootstrap-slider.min.js"></script>
+    <!--Slider-JS-->
+    <script src="~/Website/assets/js/slick.min.js"></script>
+    <script src="~/Website/assets/js/owl.carousel.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <title>CarForYou - Responsive Car Dealer HTML5 Template</title>
+    <!--Bootstrap -->
+    <link rel="stylesheet" href="~/Website/assets/css/bootstrap.min.css" type="text/css">
+    <!--Custome Style -->
+    <link rel="stylesheet" href="~/Website/assets/css/style.css" type="text/css">
+    <link rel="stylesheet" href="~/Website/assets/css/custom.css" type="text/css">
+    <!--OWL Carousel slider-->
+    <link rel="stylesheet" href="~/Website/assets/css/owl.carousel.css" type="text/css">
+    <link rel="stylesheet" href="~/Website/assets/css/owl.transitions.css" type="text/css">
+    <!--slick-slider -->
+    <link href="~/Website/assets/css/slick.css" rel="stylesheet">
+    <!--bootstrap-slider -->
+    <link href="~/Website/assets/css/bootstrap-slider.min.css" rel="stylesheet">
+    <!--FontAwesome Font Style -->
+    <link href="~/Website/assets/css/fontawesome.min.css" rel="stylesheet">
+
+    <!-- SWITCHER -->
+    <link rel="stylesheet" id="switcher-css" type="text/css" href="~/Website/assets/switcher/css/switcher.css" media="all" />
+    <link rel="alternate stylesheet" type="text/css" href="~/Website/assets/switcher/css/red.css" title="red" media="all" data-default-color="true" />
+    <link rel="alternate stylesheet" type="text/css" href="~/Website/assets/switcher/css/orange.css" title="orange" media="all" />
+    <link rel="alternate stylesheet" type="text/css" href="~/Website/assets/switcher/css/blue.css" title="blue" media="all" />
+    <link rel="alternate stylesheet" type="text/css" href="~/Website/assets/switcher/css/pink.css" title="pink" media="all" />
+    <link rel="alternate stylesheet" type="text/css" href="~/Website/assets/switcher/css/green.css" title="green" media="all" />
+    <link rel="alternate stylesheet" type="text/css" href="~/Website/assets/switcher/css/purple.css" title="purple" media="all" />
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="~/Website/assets/images/favicon-icon/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="~/Website/assets/images/favicon-icon/apple-touch-icon-114-precomposed.html">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="~/Website/assets/images/favicon-icon/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="~/Website/assets/images/favicon-icon/apple-touch-icon-57-precomposed.png">
+    <link rel="shortcut icon" href="~/Website/assets/images/favicon-icon/favicon.png">
+    <!-- Google-Font-->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+        .header_wrap {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Eğer yatay olarak içerikler arasında eşit boşluk istiyorsanız */
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .visible {
+            display: block;
+        }
+
+        .logout-link:hover {
+            color: whitesmoke !important;
+            background-color: red !important
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav id="navigation_bar" class="navbar navbar-expand-lg">
+            <div class="container">
+                <div class="row header-row desktop">
+                    <div class="navbar-header">
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                                aria-label="Toggle navigation">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                    </div>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav">
+                            <li><a asp-area="Website" asp-controller="Home">Anasayfa</a></li>
+                            <li><a asp-area="Website" asp-controller="AboutUs">Hakkımızda</a></li>
+                            <li><a asp-area="Website" asp-controller="Cars">Popüler Arabalar</a></li>
+                            <li class="dropdown">
+                                <a href="#" id="dropdownMenuButton2" data-bs-toggle="dropdown"
+                                   aria-expanded="false">Sayfalar</a>
+                                <ul class="dropdown-menu">
+                                    <li><a asp-area="Website" asp-controller="Services">Hizmetler</a></li>
+                                    <li><a asp-area="Website" asp-controller="ContactUs">Bize Ulaşın</a></li>
+                                    <li><a asp-area="Website" asp-controller="Compare">Araçları Karşılaştırın</a></li>
+                                    <li><a asp-area="Website" asp-controller="SSS">SSS</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    @*Giriş yap butonu*@
+                    @{
+                        var userLoginClass = ViewBag.UserIsAuthenticated ? "visible" : "hidden";
+                        var loginBtnClass = ViewBag.UserIsAuthenticated ? "hidden" : "visible";
+
+                        var userNameSurname = Context.Items["UserNameSurname"]?.ToString();
+                    }
+
+                    <div class="header_wrap">
+                        <div class="user_login @userLoginClass">
+                            <ul>
+                                <li class="dropdown dropdown-toggle">
+                                    <a href="#" class="dropdown-toggle" id="dropdownMenuButton4"
+                                       data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa fa-user-circle" aria-hidden="true"></i>
+                                        <span id="userName">@userNameSurname</span>              @*<-----------------*@
+                                        <i class="fa fa-angle-down" aria-hidden="true"></i>
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton4">
+                                        <li><a class="dropdown-item" asp-area="Website" asp-controller="ProfileSettings">Profil Ayarları</a></li>
+                                        <li><a class="dropdown-item" asp-area="Website" asp-controller="MyCars">Arabalarım</a></li>
+                                        <li><a class="dropdown-item" asp-area="Website" asp-controller="PostCar">Arabayı İlana Ver</a></li>
+                                        <li>
+                                            <a class="dropdown-item logout-link" asp-area="Website" asp-controller="Account" asp-action="Logout">Çıkış Yap</a>
+
+
+                                        </li>
+
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="login_btn @loginBtnClass">
+                            <a href="#loginform" class="btn btn-xs uppercase" data-bs-toggle="modal"
+                               data-bs-dismiss="modal">Giriş Yap / Kayıt Ol</a>
+                        </div>
+                        <div class="header_search">
+                            <div id="search_toggle"><i class="fa fa-search" aria-hidden="true"></i></div>
+                            <form action="#" method="get" id="header-search-form">
+                                <input type="text" placeholder="Ara..." class="form-control">
+                                <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <!-- Navigation end -->
+    </header>
+
+    <!--Login-Form -->
+    <div class="modal fade" id="loginform">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h3 class="modal-title">Giriş Yap</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="login_wrap">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6">
+                                <form id="loginForm" asp-area="Website" asp-controller="Account" asp-action="Login" method="post" class="needs-validation" novalidate>
+                                    <div class="form-group">
+                                        <input type="text" name="UsernameOrEmail" class="form-control" placeholder="Kullanıcı adı veya E-Posta*" required>
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Kullanıcı adı veya E-Posta Giriniz!
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" name="Password" class="form-control" placeholder="Şifre*" required>
+                                        <div class="invalid-feedback">
+                                            Şifre gereklidir.
+                                        </div>
+                                    </div>
+
+                                    <div id="serverError" class="text-danger mt-2"></div>
+
+                                    <div class="form-group checkbox">
+                                        <input type="checkbox" id="remember">
+                                        <label for="remember">Beni hatırla</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="submit" value="Giriş" class="btn btn-block">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <h6 class="gray_text">Hızlıca Giriş Yap</h6>
+                                <a href="#" class="btn btn-block googleplus-btn">
+                                    <i class="fa fa-google-plus-square" aria-hidden="true"></i>Google+ ile giriş yap
+                                </a>
+                            </div>
+                            <div class="mid_divider"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer text-center">
+                    <p>
+                        Hesabınız yok mu? <a href="#signupform" data-bs-toggle="modal" data-bs-dismiss="modal">Burdan Kayıt Olun</a>
+                    </p>
+                    <p><a href="#forgotpassword" data-bs-toggle="modal" data-bs-dismiss="modal">Şifrenizi mi Unuttunuz ?</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/Login-Form -->
+    <!--SignUp-Form -->
+    <div class="modal fade" id="signupform">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h3 class="modal-title">Kayıt Olun</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="signup_wrap">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6">
+                                <form id="signupForm" asp-area="Website" asp-controller="Account" asp-action="Create" method="post">
+                                    <div class="form-group">
+                                        <input name="NameSurname" type="text" class="form-control" placeholder="Ad Soyad" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="Email" type="email" class="form-control" placeholder="E-Posta" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="Password" type="password" class="form-control" placeholder="Şifre" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="PasswordConfirm" type="password" class="form-control" placeholder="Şifre" required>
+                                    </div>
+                                    <div id="signupFormserverError" class="text-danger mt-2"></div>
+                                    <div class="form-group checkbox">
+                                        <input type="checkbox" id="terms_agree">
+                                        <label for="terms_agree"> Şartlar Ve Koşulları <a href="#">Kabul Ediyorum</a></label>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="submit" value="Kayıt" class="btn btn-block">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <h6 class="gray_text">Hızlıca Giriş Yapın</h6>
+                                <a href="#" class="btn btn-block googleplus-btn">
+                                    <i class="fa fa-google-plus-square" aria-hidden="true"></i> Google+ ile giriş yap
+                                </a>
+                            </div>
+                            <div class="mid_divider"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer text-center">
+                    <p>
+                        Zaten bir hesabınız var mı ? <a href="#loginform" data-bs-toggle="modal" data-bs-dismiss="modal">Giriş Yapın</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/SignUp-Form -->
+    <!--Forgot-password-Form -->
+    <div class="modal fade" id="forgotpassword">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h3 class="modal-title">Şifre Sıfırlama</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="forgotpassword_wrap">
+                            <div class="col-md-12">
+                                <form action="#" method="get">
+                                    <div class="form-group">
+                                        <input type="email" class="form-control" placeholder="E-Posta Adresiniz*">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="submit" value="Şifremi Sıfırla" class="btn btn-block">
+                                    </div>
+                                </form>
+                                <div class="text-center">
+                                    <p class="gray_text">
+                                        Şifreniz sıfırlanacak ve yenisi gönderilecek.
+                                    </p>
+                                    <p>
+                                        <a href="#loginform" data-bs-toggle="modal" data-bs-dismiss="modal">
+                                            <i class="fa fa-angle-double-left" aria-hidden="true"></i> Giriş'e Geri Dön
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/Forgot-password-Form -->
+
+    @RenderBody()
+
+
+    <footer>
+        <div class="footer-top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3 col-sm-6">
+                        <h6>EN İYİ KATEGORİLER</h6>
+                        <ul>
+                            <li><a href="#">Crossovers</a></li>
+                            <li><a href="#">Hybrids</a></li>
+                            <li><a href="#">Hybrid Cars</a></li>
+                            <li><a href="#">Hybrid SUVs</a></li>
+                            <li><a href="#">Concept Vehicles</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <h6>Hakkımızda</h6>
+                        <ul>
+                            <li><a href="#">Privacy</a></li>
+                            <li><a href="#">Hybrid Cars</a></li>
+                            <li><a href="#">Cookies</a></li>
+                            <li><a href="#">Trademarks</a></li>
+                            <li><a href="#">Terms of use</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <h6>Kullanışlı Linkler</h6>
+                        <ul>
+                            <li><a href="#">Our Partners</a></li>
+                            <li><a href="#">Careers</a></li>
+                            <li><a href="#">Sitemap</a></li>
+                            <li><a href="#">Investors</a></li>
+                            <li><a href="#">Request a Quote</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <h6>HABER BÜLTENİNE ABONE OL</h6>
+                        <div class="newsletter-form">
+                            <form action="#">
+                                <div class="form-group">
+                                    <input type="email" class="form-control newsletter-input" required
+                                           placeholder="E-Posta Adresinizi Girin" />
+                                </div>
+                                <button type="submit" class="btn btn-block">
+                                    Abone OL <span class="angle_arrow">
+                                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                    </span>
+                                </button>
+                            </form>
+                            <p class="subscribed-text">
+                                *We send great deals and latest auto news to our subscribed users every week.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="copy-right">Copyright &copy; 2023 CarForYou. All Rights Reserved</p>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <div class="footer_widget">
+                            <p>Download Our APP:</p>
+                            <ul>
+                                <li><a href="#"><i class="fa fa-android" aria-hidden="true"></i></a></li>
+                                <li><a href="#"><i class="fa fa-apple" aria-hidden="true"></i></a></li>
+                            </ul>
+                        </div>
+                        <div class="footer_widget">
+                            <p>Connect with Us:</p>
+                            <ul>
+                                <li><a href="#"><i class="fa fa-facebook-square" aria-hidden="true"></i></a></li>
+                                <li><a href="#"><i class="fa fa-twitter-square" aria-hidden="true"></i></a></li>
+                                <li><a href="#"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+                                <li><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        $(document).ready(function () {
+            $('#signupForm').on('submit', function (event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: '/Account/Create',
+                    data: formData,
+                    success: function (response) {
+                        if (response.isSuccess) {
+                            $('#signupform').modal('hide');
+                            $('#loginform').modal('show');
+                            $('#signupFormserverError').text('İşlem başarılı').removeClass('text-danger').addClass('text-success');
+                        } else {
+                            if(response.message)
+                                $('#signupFormserverError').text(response.message).removeClass('text-success').addClass('text-danger');
+                            else
+                                $('#signupFormserverError').text(response.errors[0]).removeClass('text-success').addClass('text-danger');
+
+                        }
+                    },
+                    error: function () {
+                        $('#signupFormserverError').text('Beklenmeyen bir hata oluştu.').removeClass('text-success').addClass('text-danger');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        function getCookie(name) {
+            var value = "; " + document.cookie;
+            var parts = value.split("; " + name + "=");
+            if (parts.length == 2) return parts.pop().split(";").shift();
+        }
+
+        document.getElementById("loginForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            if (!event.target.checkValidity()) {
+                event.target.classList.add('was-validated');
+                return;
+            }
+
+            var formData = new FormData(event.target);
+
+            fetch(event.target.action, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json', // İstek başlıklarında JSON yanıtı kabul edeceğinizi belirtin.
+                },
+                body: formData
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.isSuccess) {
+                        $(".login_btn").hide();
+                        $(".user_login").show();
+                        $('#loginform').modal('hide');
+                        var userName = getCookie('UserName');
+                        if (userName) {
+                            $("#userName").text(decodeURIComponent(userName));
+                        };
+                    } else {
+                        $(".login_btn").show();
+                        $(".user_login").hide();
+
+                        document.getElementById("serverError").textContent = data.message;
+                    }
+                })
+                .catch(error => {
+                    alert("Bir hata oluştu. Lütfen tekrar deneyin.");
+                });
+        });
+    </script>
+
+
+    
+</body>
+</html>

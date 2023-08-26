@@ -1,0 +1,16 @@
+﻿
+<!-- _ProfileNav.cshtml -->
+<div class="profile_nav">
+    <ul>
+        <li class="@(ViewContext.RouteData.Values["controller"].ToString() == "ProfileSettings" ? "active" : "")">
+            <a asp-area="Website" asp-controller="ProfileSettings">Profil Ayarları</a>
+        </li>
+        <li class="@(ViewContext.RouteData.Values["controller"].ToString() == "MyCars" ? "active" : "")">
+            <a asp-area="Website" asp-controller="MyCars">Arabalarım</a>
+        </li>
+        <li class="@(ViewContext.RouteData.Values["controller"].ToString() == "PostCar" ? "active" : "")">
+            <a asp-area="Website" asp-controller="PostCar">Arabayı İlana Ver</a>
+        </li>
+    </ul>
+</div>
+

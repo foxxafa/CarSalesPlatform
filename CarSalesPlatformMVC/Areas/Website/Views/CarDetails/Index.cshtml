@@ -1,0 +1,425 @@
+﻿@model CarSalesPlatformMVC.Areas.Website.Models.ViewModels.CarDetailsViewModel;
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Website/Views/Shared/_websiteLayout.cshtml";
+}
+
+<style>
+    .listing_images_slider img {
+        width: 100%;
+        height: 500px;
+        object-fit: cover;
+        object-position: center;
+        margin: auto;
+    }
+
+    .listing_images_slider_nav img {
+        width: 250px;
+        height: 100px; 
+        object-fit: cover;
+        object-position: center;
+        margin: auto;
+    }
+
+    .fa-check, .fa-close {
+        color: #FA2837; 
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .center-icon {
+        text-align: center;
+    }
+</style>
+
+<!-- Listing-detail-header -->
+<section class="listing_detail_header">
+    <div class="container">
+        <div class="listing_detail_head white-text div_zindex row">
+            <div class="col-md-9">
+                <h2>@Model.CarHeader</h2>
+                <h3>@Model.Name</h3>
+
+                <div class="car-location">
+                    <span>
+                        <i class="fa fa-map-marker" aria-hidden="true"></i>
+                        <span id="car-address">Adres yükleniyor...</span>
+                    </span>
+                </div>
+
+                <div class="add_compare">
+                    <div class="checkbox">
+                        <input value="" id="compare14" type="checkbox">
+                        <label for="compare14">Karşılaştırmaya ekle</label>
+                    </div>
+                    <div class="share_vehicle">
+                        <p>
+                            Paylaş: <a href="#"><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
+                            <a href="https://www.instagram.com/"><i class="fa fa-twitter-square" aria-hidden="true"></i></a>
+                            <a href="#"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a> <a href="#"></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="price_info">
+                    <p>@Model.Price TL</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dark-overlay"></div>
+</section>
+<!-- /Listing-detail-header -->
+<!--Listing-detail-->
+<section class="listing-detail">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="listing_images">
+                    <div class="listing_images_slider">
+                        @if (Model.Images != null)
+                        {
+                            foreach (var image in Model.Images)
+                            {
+                                <div> <img src="~/images/@image.ImagePath" alt="image"> </div>
+                            }
+                        }
+                    </div>
+                    <div class="listing_images_slider_nav">
+                        @if (Model.Images != null)
+                        {
+                            foreach (var image in Model.Images)
+                            {
+                                <div> <img src="~/images/@image.ImagePath" alt="image"> </div>
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="main_features">
+                    <ul>
+                        <li>
+                            <i class="fa fa-tachometer" aria-hidden="true"></i>
+                            <h5>@Model.Mileage</h5>
+                            <p>Kilometre</p>
+                        </li>
+                        <li>
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                            <h5>@Model.Year</h5>
+                            <p>Kayıt Yılı</p>
+                        </li>
+                        <li>
+                            <i class="fa fa-cogs" aria-hidden="true"></i>
+                            <h5>@Model.FuelTypeName</h5>
+                            <p>Yakıt Türü</p>
+                        </li>
+                        <li>
+                            <i class="fa fa-power-off" aria-hidden="true"></i>
+                            <h5>@Model.GearTypeName</h5>
+                            <p>Vites Türü</p>
+                        </li>
+                        <li>
+                            <i class="fa fa-superpowers" aria-hidden="true"></i>
+                            <h5>@Model.EngineDescription</h5>
+                            <p>Motor</p>
+                        </li>
+                        <li>
+                            <i class="fa fa-user-plus" aria-hidden="true"></i>
+                            <h5>@Model.SeatCount</h5>
+                            <p>Koltuk Sayısı</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="listing_more_info">
+                    <div class="listing_detail_wrap">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation"><a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Araca Genel Bakış </a></li>
+                            <li class="nav-item" role="presentation"><a class="nav-link" id="Accessories-tab" data-bs-toggle="tab" href="#Accessories" role="tab" aria-controls="Accessories" aria-selected="true">Aksesuarlar</a></li>
+                            <li class="nav-item" role="presentation"><a class="nav-link" id="Location-tab" data-bs-toggle="tab" href="#Location" role="tab" aria-controls="Location" aria-selected="true">Konum</a></li>
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content" id="myTabContent">
+                            <!-- vehicle-overview -->
+                            <div role="tabpanel" class="tab-pane active" id="home" aria-labelledby="home-tab">
+                                @Model.Description
+                            </div>
+
+                            <!-- Accessories -->
+                            <div role="tabpanel" class="tab-pane" id="Accessories" aria-labelledby="Accessories-tab">
+                                <!--Accessories-->
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2">Aksesuarlar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Klima</td>
+                                            <td class="center-icon">
+                                                <i class="fa fa-@(Model.AirConditioner ? "check":"close")" aria-hidden="true"></i>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Anti Blokaj Fren Sistemi</td>
+                                            <td class="center-icon">
+                                                <i class="fa fa-@(Model.AntiLock ? "check":"close")" aria-hidden="true"></i>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Hidrolik Direksiyon</td>
+                                            <td class="center-icon">
+                                                <i class="fa fa-@(Model.Steering ? "check":"close")" aria-hidden="true"></i>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Elektrikli Pencere</td>
+                                            <td class="center-icon">
+                                                <i class="fa fa-@(Model.Windows ? "check":"close")" aria-hidden="true"></i>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>CD Çalar</td>
+                                            <td class="center-icon">
+                                                <i class="fa fa-@(Model.Player ? "check":"close")" aria-hidden="true"></i>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Deri Koltuk</td>
+                                            <td class="center-icon">
+                                                <i class="fa fa-@(Model.Seats ? "check":"close")" aria-hidden="true"></i>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Merkezi Kilitleme</td>
+                                            <td class="center-icon">
+                                                <i class="fa fa-@(Model.Locking ? "check":"close")" aria-hidden="true"></i>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Elektrikli Kapı Kilitleri</td>
+                                            <td class="center-icon">
+                                                <i class="fa fa-@(Model.Door ? "check":"close")" aria-hidden="true"></i>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Fren Asistanı</td>
+                                            <td class="center-icon">
+                                                <i class="fa fa-@(Model.Brake ? "check":"close")" aria-hidden="true"></i>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Sürücü Hava Yastığı</td>
+                                            <td class="center-icon">
+                                                <i class="fa fa-@(Model.Airbag ? "check":"close")" aria-hidden="true"></i>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Yolcu Hava Yastığı</td>
+                                            <td class="center-icon">
+                                                <i class="fa fa-@(Model.PassengerAirbag ? "check":"close")" aria-hidden="true"></i>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Çarpışma Sensörü</td>
+                                            <td class="center-icon">
+                                                <i class="fa fa-@(Model.Sensor ? "check":"close")" aria-hidden="true"></i>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Motor Kontrol Uyarısı</td>
+                                            <td class="center-icon">
+                                                <i class="fa fa-@(Model.EngineWarning ? "check":"close")" aria-hidden="true"></i>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Otomatik Far</td>
+                                            <td class="center-icon">
+                                                <i class="fa fa-@(Model.Headlamps ? "check":"close")" aria-hidden="true"></i>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Location -->
+                            <div role="tabpanel" class="tab-pane" id="Location" aria-labelledby="Location-tab">
+                                <!--Location-->
+                                <div class="map-directions">
+                                    <a href="@($"https://www.google.com/maps/@{Model.Latitude},{Model.Longitude},15z")" target="_blank"></i>Konuma Git (Google Maps)</a>
+                                </div>
+                                <div id="map" style="height: 350px; width: 100%;"></div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    @* <!--Vehicle-Video-->
+                    <div class="video_wrap">
+                    <h6>Watch Video </h6>
+                    <div class="video-box">
+                    <iframe class="mfp-iframe" src="https://www.youtube.com/embed/-DnpdqqBOnY" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                    </div>*@
+
+                </div>
+            </div>
+
+            <!--Side-Bar-->
+            <aside class="col-md-4">
+                <div class="sidebar_widget">
+                    <div class="widget_heading">
+                        <h5><i class="fa fa-address-card-o" aria-hidden="true"></i> Satıcı Bilgileri </h5>
+                    </div>
+                    <div class="row">
+                        <!-- Fotoğraf -->
+                        <div class="col-md-4">
+                            <img src="/@Model.ProfileImagePath" alt="image" class="img-fluid">
+                        </div>
+                        <!-- Kullanıcı Bilgileri -->
+                        <div class="col-md-8">
+                            <div class="dealer_detail">
+                                <p><span>Ad Soyad:</span> @Model.NameSurname</p>
+                                <p><span>E-Posta:</span> @Model.Email</p>
+                                <p><span>Telefon Numarası:</span>@Model.Phone</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="sidebar_widget">
+                    <div class="table-responsive">
+                        <!--Basic-Info-Table-->
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th colspan="2">Temel Bilgiler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Marka</td>
+                                    <td>@Model.BrandName</td>
+                                </tr>
+                                <tr>
+                                    <td>Kategori</td>
+                                    <td>@Model.CategoryName</td>
+                                </tr>
+                                <tr>
+                                    <td>Model Yılı</td>
+                                    <td>@Model.Year</td>
+                                </tr>
+                                <tr>
+                                    <td>Renk</td>
+                                    <td>@Model.ColorName</td>
+                                </tr>
+                                <tr>
+                                    <td>KM</td>
+                                    <td>@Model.Mileage</td>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+
+                        <!--Technical-Specification-Table-->
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th colspan="2">Teknik Özellikler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Motor Açıklaması</td>
+                                    <td>@Model.EngineDescription</td>
+                                </tr>
+                                <tr>
+                                    <td>Yakıt Kapasitesi</td>
+                                    <td>@Model.FuelTankCapacity</td>
+                                </tr>
+                                <tr>
+                                    <td>Koltuk sayısı</td>
+                                    <td>@Model.SeatCount</td>
+                                </tr>
+                                <tr>
+                                    <td>Yakıt Türü</td>
+                                    <td>@Model.FuelTypeName</td>
+                                </tr>
+                                <tr>
+                                    <td>Vites Türü</td>
+                                    <td>@Model.GearTypeName</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+        </div>
+
+        </aside>
+        <!--/Side-Bar-->
+        <!--     <div class="space-20"></div> -->
+        <div class="divider"></div>
+
+    </div>
+</section>
+<!--/Listing-detail-->
+<!--Brands-->
+@Html.Partial("_PopularBrandsLayout")
+<!-- /Brands-->
+<!--Back to top-->
+<div id="back-top" class="back-top"> <a href="#top"><i class="fa fa-angle-up" aria-hidden="true"></i> </a> </div>
+<!--/Back to top-->
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+
+<script>
+    // C#'dan gelen veriyi al
+    var latitude = @Model.Latitude;
+    var longitude = @Model.Longitude;
+
+    var map;
+
+    // Sekme değiştiğinde çalışacak fonksiyon
+    $('#myTab a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+        if (e.target.id === 'Location-tab') {
+            initMap();
+        }
+    });
+
+    function initMap() {
+        if (!map) {
+            // Harita ayarları
+            map = L.map('map').setView([latitude, longitude], 15);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+            }).addTo(map);
+
+            // İşaretçi ekleyin
+            L.marker([latitude, longitude]).addTo(map)
+                .bindPopup('Burası')
+                .openPopup();
+
+            // Eğer harita içinde bir modal veya sekmede ise ve tam olarak yüklenmiyorsa, bu metod haritanın doğru şekilde yüklenmesini sağlar
+            map.invalidateSize();
+        }
+    }
+
+    // Ters coğrafi kodlama yap ve adresi güncelle
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`)
+        .then(response => response.json())
+        .then(data => {
+            var address = data.address;
+            var formattedAddress = `${address.province || ''} ${address.town || ''} ${address.suburb || ''} ${address.road || ''} ${address.postcode || ''}`;
+
+            // HTML içeriğini güncelle
+            document.getElementById('car-address').innerText = formattedAddress;
+        });
+</script>

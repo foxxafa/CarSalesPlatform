@@ -1,0 +1,315 @@
+﻿@using Domain.Entities;
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Website/Views/Shared/_websiteLayout.cshtml";
+}
+
+<style>
+
+    .img-fluid {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        object-fit: cover;
+        max-height: 100%;
+        height: 180px;
+    }
+
+</style>
+
+<!--Page Header-->
+<section class="page-header listing_page">
+    <div class="container">
+        <div class="page-header_wrap">
+            <div class="page-heading">
+                <h1>Arabalar</h1>
+            </div>
+            <ul class="coustom-breadcrumb">
+                <li><a asp-area="Website" asp-controller="Home">Anasayfa</a></li>
+                <li>Arabalar</li>
+            </ul>
+        </div>
+    </div>
+    <!-- Dark Overlay-->
+    <div class="dark-overlay"></div>
+</section>
+<!-- /Page Header-->
+<!--Listing-grid-view-->
+<section class="listing-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9 col-md-push-3">
+                <div class="result-sorting-wrapper">
+                    <div class="sorting-count">
+                        <p>1 - 12 <span>Arama sonuçlarınız için toplam 50 sonuç.</span></p>
+                    </div>
+                    <div class="result-sorting-by">
+                        <p>Sırala:</p>
+                        <form action="#" method="post">
+                            <div class="form-group select sorting-select">
+                                <select class="form-control ">
+                                    <option>Fiyat (Düşükten Yükseğe)</option>
+                                    <option>Fiyat (Yüksekten Düşüğe)</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="row" id="carListRow"></div>
+                <div class="pagination">
+                    <ul>
+
+                    </ul>
+                </div>
+            </div>
+
+            <!--Side-Bar-->
+            <aside class="col-md-3 col-md-pull-9">
+                <div class="sidebar_widget sidebar_search_wrap">
+                    <div class="widget_heading">
+                        <h5><i class="fa fa-filter" aria-hidden="true"></i> Hayalindeki Arabayı Bul </h5>
+                    </div>
+                    <div class="sidebar_filter">
+                        <form action="#" method="get">
+                            <div class="form-group select">
+                                <div class="form-group select">
+                                    <select class="form-control">
+                                        <option>Renkler</option>
+                                        @foreach (var color in ViewBag.Colors as List<Color>)
+                                        {
+                                            <option value="@color.Id">@color.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group select">
+                                    <select class="form-control">
+                                        <option>Markalar</option>
+                                        @foreach (var brand in ViewBag.Brands as List<Brand>)
+                                        {
+                                            <option value="@brand.Id">@brand.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group select">
+                                    <select class="form-control">
+                                        <option>Kategoriler</option>
+                                        @foreach (var category in ViewBag.Categories as List<Category>)
+                                        {
+                                            <option value="@category.Id">@category.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group select">
+                                    <select class="form-control">
+                                        <option>Yakıt Türleri</option>
+                                        @foreach (var fuelType in ViewBag.FuelTypes as List<FuelType>)
+                                        {
+                                            <option value="@fuelType.Id">@fuelType.Type</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="form-group select">
+                                    <select class="form-control">
+                                        <option>Vites Türleri</option>
+                                        @foreach (var gearType in ViewBag.GearTypes as List<GearType>)
+                                        {
+                                            <option value="@gearType.Id">@gearType.Type</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Price Range ($) </label>
+                                    <input id="price_range" type="text" class="span2" value="" data-slider-min="50" data-slider-max="6000" data-slider-step="5" data-slider-value="[1000,5000]" />
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-block"><i class="fa fa-search" aria-hidden="true"></i> Search Car</button>
+                                </div>
+                        </form>
+                    </div>
+                </div>
+        </div>
+        <div class="sidebar_widget sell_car_quote">
+            <div class="white-text div_zindex text-center">
+                <h3>Sell Your Car</h3>
+                <p>Request a quote and sell your car now!</p>
+                <a href="#" class="btn">Request a Quote <span class="angle_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></span></a>
+            </div>
+            <div class="dark-overlay"></div>
+        </div>
+        <div class="sidebar_widget">
+            <div class="widget_heading">
+                <h5><i class="fa fa-car" aria-hidden="true"></i> Recently Listed Cars</h5>
+            </div>
+            <div class="recent_addedcars">
+                <ul>
+                    <li class="gray-bg">
+                        <div class="recent_post_img"> <a href="#"><img src="~/Website/assets/images/post_200x200_1.jpg" alt="image"></a> </div>
+                        <div class="recent_post_title">
+                            <a href="#">Ford Shelby GT350</a>
+                            <p class="widget_price">$92,000</p>
+                        </div>
+                    </li>
+                    <li class="gray-bg">
+                        <div class="recent_post_img"> <a href="#"><img src="~/Website/assets/images/post_200x200_2.jpg" alt="image"></a> </div>
+                        <div class="recent_post_title">
+                            <a href="#">BMW 535i</a>
+                            <p class="widget_price">$92,000</p>
+                        </div>
+                    </li>
+                    <li class="gray-bg">
+                        <div class="recent_post_img"> <a href="#"><img src="~/Website/assets/images/post_200x200_3.jpg" alt="image"></a> </div>
+                        <div class="recent_post_title">
+                            <a href="#">Mazda CX-5 SX, V6, ABS, Sunroof </a>
+                            <p class="widget_price">$92,000</p>
+                        </div>
+                    </li>
+                    <li class="gray-bg">
+                        <div class="recent_post_img"> <a href="#"><img src="~/Website/assets/images/post_200x200_4.jpg" alt="image"></a> </div>
+                        <div class="recent_post_title">
+                            <a href="#">Ford Shelby GT350 </a>
+                            <p class="widget_price">$92,000</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        </aside>
+        <!--/Side-Bar-->
+    </div>
+    </div>
+</section>
+<!--/Listing-grid-view-->
+
+
+<script>
+    function fetchCars(color, brand, category, fuelType, gearType, minPrice, maxPrice, page) {
+        $.ajax({
+            url: '/Cars/GetFiltredCars',
+            type: 'GET',
+            data: {
+                ColorId: color,
+                BrandId: brand,
+                CategoryId: category,
+                FuelTypeId: fuelType,
+                GearTypeId: gearType,
+                MinPrice: minPrice,
+                MaxPrice: maxPrice,
+                Page: page
+            },
+            success: function (response) {
+                var carList = response.car; // Araba listesi
+                var carImageList = response.carsImage; // Araba resimleri
+                var row = $('#carListRow'); // Arabaların ekleneceği ana div
+                row.empty(); // Eğer varsa önceki arabaları sil
+
+                for (var i = 0; i < carList.length; i++) {
+                    var car = carList[i];
+                    var carImage = "/images/" + carImageList[i]; // Her bir araba için ilgili resim
+
+                    // HTML yapısını oluştur
+                    var carHtml = `
+        <div class="col-md-4 grid_listing">
+            <div class="product-listing-m gray-bg">
+                <div class="product-listing-img">
+                    <a href="/CarDetails/${car.carId}"><img src="${carImage}" class="img-fluid" alt=""> </a>
+                    <div class="compare_item">
+                        <div class="checkbox">
+                            <input type="checkbox" id="compare${i}">
+                            <label for="compare${i}">Compare</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-listing-content">
+                    <h5><a href="/CarDetails/${car.carId}">${car.name}</a></h5>
+                    <p class="list-price">$${car.price}</p>
+                    <div class="car-location"><span><i class="fa fa-map-marker" aria-hidden="true"></i> ${car.location}</span></div>
+                    <ul class="features_list">
+                        <li><i class="fa fa-road" aria-hidden="true"></i>${car.mileage} km</li>
+                        <li><i class="fa fa-calendar" aria-hidden="true"></i>${car.year} Model</li>
+                        <li><i class="fa fa-car" aria-hidden="true"></i>${car.fuelType}</li>
+                            <li><i class="fa fa-gear" aria-hidden="true"></i>${car.gearType}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    `;
+
+                    row.append(carHtml);
+                }
+                updatePagination(response.pagination.currentPage, response.pagination.totalPages);
+            }
+
+        });
+    }
+</script>
+<script>
+    function updatePagination(currentPage, totalPages) {
+        var paginationHtml = "";
+        for (var i = 1; i <= totalPages; i++) {
+            if (currentPage == i) {
+                paginationHtml += `<li class="current">${i}</li>`;
+            } else {
+                paginationHtml += `<li><a href="javascript:void(0)" class="pagination-link" data-page="${i}">${i}</a></li>`;
+            }
+        }
+        $('.pagination ul').html(paginationHtml);
+
+        // Yeni pagination linklerine click event listener ekliyoruz.
+        $(".pagination-link").click(function () {
+            var page = $(this).data("page");
+
+            // URL query parametresini güncelle
+            var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?page=' + page;
+            window.history.pushState({ path: newurl }, '', newurl);
+
+            // Verileri getir
+            fetchCars(null, null, null, null, null, 50, 6000, page);
+        });
+    }
+
+    $(document).ready(function () {
+        
+
+        if (localStorage.getItem('minPrice'))
+        {
+            var color = localStorage.getItem('color');
+            var brand = localStorage.getItem('brand');
+            var category = localStorage.getItem('category');
+            var fueltype = localStorage.getItem('fuelType');
+            var gearType = localStorage.getItem('category');
+
+            var minPrice = localStorage.getItem('minPrice');
+            var maxPrice = localStorage.getItem('maxPrice');
+
+            localStorage.removeItem('minPrice');
+
+            fetchCars(color, brand, category, fueltype, gearType, 50, 6000, 1);
+        }
+        else
+        {
+            var urlParams = new URLSearchParams(window.location.search);
+            var page = urlParams.get('page') || 1;
+            //slider değerleri min 50 max 6000
+            fetchCars(null, null, null, null, null, 50, 6000, page);
+        }
+
+
+        $('form').on('submit', function (e) {
+            e.preventDefault();
+
+            var color = $("select[name='color']").val();
+            var brand = $("select[name='brand']").val();
+            var category = $("select[name='category']").val();
+            var fuelType = $("select[name='fuelType']").val();
+            var gearType = $("select[name='gearType']").val();
+            var priceRange = $('#price_range').val();
+            var minPrice = parseInt(priceRange.split(',')[0]);
+            var maxPrice = parseInt(priceRange.split(',')[1]);
+
+            fetchCars(color, brand, category, fuelType, gearType, minPrice, maxPrice, 1);
+        });
+    });
+</script>

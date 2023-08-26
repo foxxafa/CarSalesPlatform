@@ -1,0 +1,40 @@
+﻿<style>
+    .brand-hadding {
+        display: flex;
+        align-items: center;
+        justify-content: center; /* Eğer yatayda da ortalama isterseniz */
+    }
+
+    .img-fluid {
+        width: 200px; /* İstediğiniz genişlik */
+        height: 100px; /* İstediğiniz yükseklik */
+        object-fit: contain;
+    }
+
+    .centered-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        /*align-items: center;*/
+    }
+
+</style>
+
+<!--Brands-->
+<section class="brand-section gray-bg">
+    <div class="container centered-container">
+        <div class="brand-hadding">
+            <h5>Popüler Markalar</h5>
+        </div>
+        <div class="brand-logo-list">
+            <div id="popular_brands">
+                <div><a href="#"><img src="~/images/Brands/bmw.png" class="img-fluid" alt="image"></a></div>
+                <div><a href="#"><img src="~/images/Brands/mercedes.png" class="img-fluid" alt="image"></a></div>
+                <div><a href="#"><img src="~/images/Brands/volkswagen.png" class="img-fluid" alt="image"></a></div>
+                <div><a href="#"><img src="~/images/Brands/audi.png" class="img-fluid" alt="image"></a></div>
+                <div><a href="#"><img src="~/images/Brands/renault.png" class="img-fluid" alt="image"></a></div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /Brands-->

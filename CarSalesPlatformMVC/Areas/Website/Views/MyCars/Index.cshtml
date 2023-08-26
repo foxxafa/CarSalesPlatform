@@ -1,0 +1,216 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Website/Views/Shared/_websiteLayout.cshtml";
+}
+
+<!--Page Header-->
+<section class="page-header profile_page">
+    <div class="container">
+        <div class="page-header_wrap">
+            <div class="page-heading">
+                <h1>Arabalarım</h1>
+            </div>
+            <ul class="coustom-breadcrumb">
+                <li><a asp-area="Website" asp-controller="Home">Anasayfa</a></li>
+                <li>Arabalarım</li>
+            </ul>
+        </div>
+    </div>
+    <!-- Dark Overlay-->
+    <div class="dark-overlay"></div>
+</section>
+<!-- /Page Header-->
+<!--my-vehicles-->
+<section class="user_profile inner_pages">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 col-sm-3">
+                @Html.Partial("_ProfileNavView")
+            </div>
+
+            <div class="col-md-6 col-sm-8">
+                <div class="profile_wrap">
+                    @*<h5 class="uppercase underline">Arabalarım <span id="totalCarsCount">(@Model.TotalCars Arabanız var)</span></h5>*@
+                    <div class="my_vehicles_list">
+                        <ul class="vehicle_listing">
+                        </ul>
+                        <div class="pagination">
+                            <ul>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--/my-vehicles-->
+
+<!--Brands-->
+@Html.Partial("_PopularBrandsLayout")
+<!-- /Brands-->
+
+<!--Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmationModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3 class="modal-title">Silme Onayı</h3>
+            </div>
+            <div class="modal-body">
+                <h5>Arabanız silinecektir. Kabul ediyor musunuz?</h5>
+            </div>
+            <div class="modal-footer">
+                @*                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>*@
+                <button id="deleteButton" asp-area="Website" asp-controller="MyCars" asp-action="DeleteCar" type="button" class="btn btn-danger">Sil</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/Delete Confirmation Modal -->
+
+<script>
+    function loadCars(page) {
+        $.ajax({
+            url: '/MyCars/LoadCar',
+            type: 'POST',
+            data: { page: page },
+            success: function (response) {
+                var carList = response.car; 
+                var carImageList = response.carsImage;
+                var carHtml = "";
+                for (var i = 0; i < carList.length; i++) {
+                    var car = carList[i];
+                    var carImage = "/images/" + carImageList[i]; // Her bir araba için ilgili resim.
+                    var isActiveClass = car.isActive ? '' : 'deactive_vehicle';
+                    var activeText = car.isActive ? 'Aktif' : 'Pasif';
+                    //var activeBtnClass = car.isActive ? 'active' : ''; <a class="btn outline btn-xs ${activeBtnClass}">${activeText}</a>
+                    var activeBtnClass ='';
+                    carHtml += `<li class="${isActiveClass}" data-car-id="${car.id}">
+                                        <div class="vehicle_img">
+                                            <a href="/CarDetails/${car.id}"><img src="${carImage}" alt="image"></a>
+                                        </div>
+                                        <div class="vehicle_title">
+                                            <h6><a href="/CarDetails/${car.id}">${car.name}</a></h6>
+                                        </div>
+                                        <div class="vehicle_status">
+                                            <a class="btn btn-xs ${activeBtnClass}">${activeText}</a> 
+                                            <div class="clearfix"></div>
+                                            <a href="/UpdateCar/${car.id}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                        </div>
+                                    </li>`;
+                }
+                var paginationHtml = "";
+                for (var i = 1; i <= response.pagination.totalPages; i++) {
+                    if (response.pagination.currentPage == i) {
+                        paginationHtml += `<li class="current">${i}</li>`;
+                    } else {
+                        paginationHtml += `<li><a href="/MyCars/Index?page=${i}">${i}</a></li>`;
+                    }
+                }
+                $('.pagination ul').html(paginationHtml);
+                $('.vehicle_listing').html(carHtml);
+            },
+            error: function () {
+                console.error('Arabalar yüklenirken bir hata oluştu.');
+            }
+        });
+    }
+
+    $(document).ready(function () {
+
+        var urlParams = new URLSearchParams(window.location.search);
+        var page = urlParams.get('page') || 1;  // Eğer 'page' parametresi yoksa, default olarak 1 alınır.
+        loadCars(page);  // Sayfayı yükle
+
+        $(document).on('click', '.fa-trash', function () {
+            // İlgili arabanın ID değerini al
+            var carId = $(this).closest('li').data('car-id');
+            // ID değerini modal'da bulunan Sil butonuna aktar
+            $("#deleteButton").data('car-id', carId);
+        });
+
+
+        $("#deleteButton").click(function () {
+            var carId = $(this).data('car-id');
+
+            $.ajax({
+                url: '/MyCars/DeleteCar/' + carId,
+                type: 'DELETE',
+                success: function (result) {
+                    $('li[data-car-id="' + carId + '"]').remove();
+                    // Modal'ı kapat
+                    $("#deleteConfirmationModal").modal('hide');
+
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Arabanız Silindi',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+
+                    var remainingCars = $('li[data-car-id]').length;
+                    if (remainingCars === 0 && page > 1) {
+                        // Eğer hiç araba kalmadıysa bir önceki sayfaya git
+                        loadCars(page - 1);
+                    } else {
+                        // Aksi taktirde aynı sayfayı güncelle
+                        loadCars(page);
+                    }
+                    // Arabaların toplam sayısını güncelle
+                    var currentTotalText = $("#totalCarsCount").text();
+                    var numberPattern = /\d+/g;  // sadece sayıları almak için regex
+                    var matches = currentTotalText.match(numberPattern);
+                    if (matches && matches.length > 0) {
+                        var currentTotal = parseInt(matches[0], 10);
+                        currentTotal -= 1; // Değeri 1 azalt
+                        $("#totalCarsCount").text("(" + currentTotal + " Arabanız var)");
+                        // Eğer kalan araba sayısı 0 ise .pagination divini gizle
+                        if (currentTotal === 0) {
+                            $(".pagination").remove();
+                        }
+                    } else {
+                        console.error("Sayı formatı beklenenden farklı.");
+                    }
+                },
+                error: function (error) {
+                    // Hata alındığında burası çalışır.
+                    console.error("Silme işlemi sırasında bir hata oluştu.", error);
+                }
+            });
+        });
+    });
+
+
+</script>
+
+<script>
+    function toggleCarActiveStatus(carId, element) {
+        $.ajax({
+            url: '/MyCars/ChangeStatus',
+            type: 'POST',
+            data: { CarId: carId },
+            success: function (response) {
+                if (response.data) {
+                    $(element).removeClass('deactive_vehicle');
+                    $(element).find('.btn').text('Aktif');  //$(element).find('.btn').addClass('active').text('Aktif');
+                } else {
+                    $(element).addClass('deactive_vehicle');
+                    $(element).find('.btn').removeClass('active').text('Pasif');
+                }
+            },
+            error: function () {
+                alert('Bir hata oluştu!');
+            }
+        });
+    }
+    $(document).on('click', '.vehicle_status .btn', function () {
+        var carId = $(this).closest('li').data('car-id');
+        toggleCarActiveStatus(carId, $(this).closest('li'));
+    });
+</script>

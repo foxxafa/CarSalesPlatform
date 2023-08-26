@@ -1,0 +1,258 @@
+﻿@using CarSalesPlatformMVC.Areas.Website.Models.ViewModels
+@model UserVM
+
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Website/Views/Shared/_websiteLayout.cshtml";
+}
+
+<meta charset="UTF-8">
+
+<style>
+    .upload_user_logo img {
+        cursor: pointer;
+    }
+
+    .custom-btn {
+        min-width: 250px; /* veya istediğiniz bir değer */
+    }
+
+</style>
+
+<!--Page Header-->
+<section class="page-header profile_page">
+    <div class="container">
+        <div class="page-header_wrap">
+            <div class="page-heading">
+                <h1>Profiliniz</h1>
+            </div>
+            <ul class="coustom-breadcrumb">
+                <li><a asp-area="Website" asp-controller="Home">Anasayfa</a></li>
+                <li>Profil</li>
+            </ul>
+        </div>
+    </div>
+    <!-- Dark Overlay-->
+    <div class="dark-overlay"></div>
+</section>
+<!-- /Page Header-->
+<!--Profile-setting-->
+<section class="user_profile inner_pages">
+    <div class="container">
+
+
+        <div class="user_profile_info gray-bg padding_4x4_40 d-flex justify-content-center">
+            <div class="upload_user_logo">
+                <img id="userImage" src="~/Website/assets/images/dealer-logo.jpg" alt="image" class="mx-auto d-block" data-bs-toggle="modal" data-bs-target="#imageModal">
+            </div>
+            <input type="file" id="fileInput" style="display: none;">
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-3 col-sm-3">
+                @Html.Partial("_ProfileNavView")
+            </div>
+            <div class="col-md-6 col-sm-8">
+                <div class="profile_wrap">
+                    <h5 class="uppercase underline">Bilgilerim</h5>
+                    <form id="updateUserForm" class="needs-validation" novalidate asp-area="Website" asp-controller="ProfileSettings" asp-action="UpdateUserDetails" method="post">
+                        <div class="form-group">
+                            <label class="control-label">Adınız Soyadınız</label>
+                            <input class="form-control white_bg" name="NameSurname" id="NameSurname" type="text" value="@Model.NameSurname" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">E-Posta Adresiniz</label>
+                            <input class="form-control white_bg" name="Email" id="Email" type="email" value="@Model.Email" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Telefon Numarası</label>
+                            <input class="form-control white_bg" name="PhoneNumber" id="PhoneNumber" type="text" value="@Model.PhoneNumber" required>
+                        </div>
+                        @*<div class="form-group">
+                        <label class="control-label">Doğum Tarihi</label>
+                        <input class="form-control white_bg" name="BirthDate" id="BirthDate" type="text">
+                        </div>
+                        <div class="form-group">
+                        <label class="control-label">Adresiniz</label>
+                        <textarea class="form-control white_bg" name="Address" id="Address" rows="4"></textarea>
+                        </div>
+                        <div class="form-group">
+                        <label class="control-label">Ülkeniz</label>
+                        <input class="form-control white_bg" name="Country" id="Country" type="text">
+                        </div>
+                        <div class="form-group">
+                        <label class="control-label">Şehir</label>
+                        <input class="form-control white_bg" name="City" id="City" type="text">
+                        </div>*@
+                        <div class="gray-bg field-title">
+                            <h6>Şifrenizi Güncelleyin</h6>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Mevcut Şifreniz</label>
+                            <input class="form-control white_bg" name="CurrentPassword" id="password" type="password">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Yeni Şifre</label>
+                            <input class="form-control white_bg" name="Password" id="c-password" type="password">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Yeni Şifreyi Onaylayın</label>
+                            <input class="form-control white_bg" name="PasswordConfirm" id="c-password" type="password">
+                        </div>
+                        @*<div class="gray-bg field-title">
+                        <h6>Sosyal Linkler</h6>
+                        </div>
+                        <div class="form-group">
+                        <label class="control-label">Facebook Kimliği</label>
+                        <input class="form-control white_bg" id="facebook" type="text">
+                        </div>
+                        <div class="form-group">
+                        <label class="control-label">Twitter Kimliği</label>
+                        <input class="form-control white_bg" id="twitter" type="text">
+                        </div>
+                        <div class="form-group">
+                        <label class="control-label">Linkedin Kimliği</label>
+                        <input class="form-control white_bg" id="linkedin" type="text">
+                        </div>
+                        <div class="form-group">
+                        <label class="control-label">Google+ Kimliği</label>
+                        <input class="form-control white_bg" id="google" type="text">
+                        </div>*@
+                        <div class="form-group">
+                            <button type="submit" class="btn">Değişiklikleri Kaydet <span class="angle_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></span></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--/Profile-setting-->
+
+<!--Brands-->
+@Html.Partial("_PopularBrandsLayout")
+<!-- /Brands-->
+
+<!-- Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <h5 class="modal-title mb-3" id="imageModalLabel">Profil Fotoğrafını Değiştir</h5>
+                <button class="btn btn-primary uploadBtn mb-2 d-block custom-btn">Fotoğraf Yükle</button>
+                <button class="btn btn-secondary removeBtn mb-2 d-block custom-btn">Mevcut Fotoğrafı Kaldır</button>
+                <button type="button" class="btn btn-danger d-block custom-btn" data-bs-dismiss="modal">İptal</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#updateUserForm").submit(function (e) {
+
+            if (this.checkValidity() === false) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(this).addClass('was-validated');
+                return;
+            }
+
+            e.preventDefault();  // Form gönderimini engelle
+
+            let formData = $(this).serialize();  // Form verisini topla
+
+            $.ajax({
+                url: '/ProfileSettings/UpdateUserDetails',  // Controller ve Action
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    if (response.isSuccess) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: response.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    } else {
+                        Swal.fire('Hata!', response.message, 'error');
+                    }
+                },
+                error: function () {
+                    Swal.fire('Hata!', 'Bir hata oluştu.', 'error');
+                }
+            });
+        });
+    });
+
+</script>
+
+<script>
+    $(document).ready(function () {
+
+        $.ajax({
+            url: '/ProfileSettings/GetImage',
+            type: 'GET',
+            success: function (response) {
+                if (response) {
+                    var imagePath = response.data;
+                    if (imagePath && imagePath.length > 0) {
+                        $("#userImage").attr('src', imagePath);
+                    }
+                }
+            }
+        });
+
+        // Upload button click
+        $(".uploadBtn").click(function () {
+            $("#fileInput").click();
+        });
+
+        // Handle file input change
+        $("#fileInput").change(function () {
+            var file = this.files[0];
+            if (file) {
+                var formData = new FormData();
+                formData.append('Photo', file);
+
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $("#userImage").attr('src', e.target.result);
+
+                    $.ajax({
+                        url: '/ProfileSettings/SetProfileImage',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            if (response) {
+                                $('#imageModal').modal('hide');
+                            }
+                        }
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Remove button click
+        $(".removeBtn").click(function () {
+            $("#userImage").attr('src', '/Website/assets/images/dealer-logo.jpg');
+
+            $.ajax({
+                url: '/ProfileSettings/DeleteProfileImage',
+                type: 'DELETE',
+                success: function (response) {
+                    if (response) {
+                        $('#imageModal').modal('hide');
+                    }
+                }
+            });
+        });
+    });
+</script>

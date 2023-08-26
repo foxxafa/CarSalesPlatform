@@ -1,0 +1,551 @@
+﻿@using Domain.Entities;
+@using CarSalesPlatformMVC.Areas.Website.Models.ViewModels;
+
+
+@model CarUpdateViewModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Website/Views/Shared/_websiteLayout.cshtml";
+}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+<!--Page Header-->
+<section class="page-header profile_page">
+    <div class="container">
+        <div class="page-header_wrap">
+            <div class="page-heading">
+                <h1>Arabayı Güncelle</h1>
+            </div>
+            <ul class="coustom-breadcrumb">
+                <li><a asp-area="Website" asp-controller="Home">Anasayfa</a></li>
+                <li>Arabayı Güncelle</li>
+            </ul>
+        </div>
+    </div>
+    <!-- Dark Overlay-->
+    <div class="dark-overlay"></div>
+</section>
+<!-- /Page Header-->
+<!--Post-vehicle-->
+<section class="user_profile inner_pages">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2 col-sm-2">
+                <div class="profile_nav">
+                    <ul>
+                        <li><a href="profile-settings.html">Profil Ayarları</a></li>
+                        <li><a href="my-vehicles.html">Arabalarım</a></li>
+                        <li class="active"><a href="post-vehicle.html">Araba Yayınla</a></li>
+                        <li><a href="#">Çıkış Yap</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-9 col-sm-8">
+                <div class="profile_wrap">
+                    <h5 class="uppercase underline">Yeni Aracı Yayınla</h5>
+                    <form id="updateCar" asp-area="Website" asp-controller="UpdateCar" asp-action="UpdateCar" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label class="control-label">Araba Adı</label>
+                            <input type="hidden" name="CarId" value="@Model.CarRequest.Car.CarId" />
+                            <input class="form-control white_bg" id="VehiclesTitle" name="Car.Name" type="text" value="@Model.CarRequest.Car.Name">
+
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Marka Seçin</label>
+                            <div class="select">
+                                <select class="form-control white_bg" name="Car.BrandId">
+                                    <option>Marka Seçin</option>
+                                    @foreach (var brand in ViewBag.Brands as List<Brand>)
+                                    {
+                                        if (Model.CarRequest.Car.BrandId == brand.Id)
+                                        {
+                                            <option value="@brand.Id" selected="selected">@brand.Name</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@brand.Id">@brand.Name</option>
+                                        }
+                                    }
+                                </select>
+
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Kategori Seçin</label>
+                            <div class="select">
+                                <select class="form-control white_bg" name="Car.CategoryId">
+                                    <option>Kategori Seçin</option>
+                                    @foreach (var category in ViewBag.Categories as List<Category>)
+                                    {
+                                        if (Model.CarRequest.Car.CategoryId == category.Id)
+                                        {
+                                            <option value="@category.Id" selected="selected">@category.Name</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@category.Id">@category.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Renk Seçin</label>
+                            <div class="select">
+                                <select class="form-control white_bg" name="Car.ColorId">
+                                    <option>Renk Seçin</option>
+                                    @foreach (var color in ViewBag.Colors as List<Color>)
+                                    {
+                                        if (Model.CarRequest.Car.ColorId == color.Id)
+                                        {
+                                            <option value="@color.Id" selected="selected">@color.Name</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@color.Id">@color.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Yakıt türü seçin</label>
+                            <div class="select">
+                                <select class="form-control white_bg" name="Car.FuelTypeId">
+                                    <option>Yakıt türü seçin</option>
+                                    @foreach (var fuelType in ViewBag.FuelTypes as List<FuelType>)
+                                    {
+                                        if (Model.CarRequest.Car.FuelTypeId == fuelType.Id)
+                                        {
+                                            <option value="@fuelType.Id" selected="selected">@fuelType.Type</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@fuelType.Id">@fuelType.Type</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Vites türü seçin</label>
+                            <div class="select">
+                                <select class="form-control white_bg" name="Car.GearTypeId">
+                                    <option>Vites türü seçin</option>
+                                    @foreach (var gearType in ViewBag.GearTypes as List<GearType>)
+                                    {
+                                        if (Model.CarRequest.Car.GearTypeId == gearType.Id)
+                                        {
+                                            <option value="@gearType.Id" selected="selected">@gearType.Type</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@gearType.Id">@gearType.Type</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        @*BAŞLIK*@
+                        <div class="form-group">
+                            <label class="control-label">Araba için başlık</label>
+                            <input class="form-control white_bg" name="Car.CarHeader" id="CarHeader" type="text" asp-for="@Model.CarRequest.Car.CarHeader" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Araba için açıklama</label>
+                            <textarea name="Car.Description" class="form-control white_bg" rows="4" asp-for="@Model.CarRequest.Car.Description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Fiyat ($)</label>
+                            <input class="form-control white_bg" name="Car.Price" id="Price" type="text" asp-for="@Model.CarRequest.Car.Price">
+                        </div>
+
+                        @*-------------------------------------------------------------*@
+                        <div class="form-group">
+                            <label class="control-label">Resim yükle ( size = 900 x 560 )</label>
+                            <div class="vehicle_images">
+                                <div class="upload_more_img">
+                                    <input id="fileInput" name="Files" type="file" multiple>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="imagePreview"></div>
+
+                        <!-- Harita için div -->
+                        <div id="map" style="height: 400px; width: 100%;"></div>
+
+                        <div class="gray-bg field-title">
+                            <h6>Temel Bilgiler</h6>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Model Yılı</label>
+                            <input class="form-control white_bg" name="Car.Year" id="year" type="text" asp-for="@Model.CarRequest.Car.Year">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Yakıt Deposu (MAX LT)</label>
+                            <input class="form-control white_bg" name="Car.FuelTankCapacity" id="FuelTankCapacity" type="text" asp-for="@Model.CarRequest.Car.FuelTankCapacity">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">KM</label>
+                            <input class="form-control white_bg" name="Car.Mileage" id="kws" type="text" asp-for="@Model.CarRequest.Car.Mileage">
+                        </div>
+                        <div class="gray-bg field-title">
+                            <h6>Teknik Özellikler</h6>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Motor Açıklaması</label>
+                            <input class="form-control white_bg" name="Car.EngineDescription" id="engien-description" type="text" asp-for="@Model.CarRequest.Car.EngineDescription">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Koltuk Sayısı</label>
+                            <input class="form-control white_bg" name="Car.SeatCount" id="s-capacity" type="text" asp-for="@Model.CarRequest.Car.SeatCount">
+                        </div>
+                        <div class="gray-bg field-title">
+                            <h6>Aksesuarlar</h6>
+                        </div>
+                        <div class="vehicle_accessories">
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                @*<input type="hidden" name="airConditioner" value="false">*@
+                                <input id="air_conditioner" name="Car.airConditioner" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.airConditioner">
+                                <label for="air_conditioner">Klima</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="door" name="Car.door" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.door">
+                                <label for="door">Elektrikli Kapı Kilidi</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="antiLock" name="Car.antiLock" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.antiLock">
+                                <label for="antiLock">Anti Blokaj Fren Sistemi</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="brake" name="Car.brake" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.brake">
+                                <label for="brake">Fren Asistanı</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="steering" name="Car.steering" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.steering">
+                                <label for="steering">Hidrolik Direksiyon</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="airbag" name="Car.airbag" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.airbag">
+                                <label for="airbag">Sürücü Hava Yastığı</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="windows" name="Car.windows" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.windows">
+                                <label for="windows">Elektrikli Pencereler</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="passenger_airbag" name="Car.passengerAirbag" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.passengerAirbag">
+                                <label for="passenger_airbag">Yolcu Hava Yastığı</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="player" name="Car.player" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.player">
+                                <label for="player">CD Çalar</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="sensor" name="Car.sensor" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.sensor">
+                                <label for="sensor">Çarpışma Sensörü</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="seats" name="Car.seats" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.seats">
+                                <label for="seats">Deri Koltuk</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="engine_warning" name="Car.engineWarning" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.engineWarning">
+                                <label for="engine_warning">Motor Kontrol Uyarısı</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="locking" name="Car.locking" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.locking">
+                                <label for="locking">Merkezi Kilitlenme</label>
+                            </div>
+                            <div class="form-group checkbox col-md-6 accessories_list">
+                                <input id="headlamps" name="Car.headlamps" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.headlamps">
+                                <label for="headlamps">Atomatik Far</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn">Arabayı Güncelle<span class="angle_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></span></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--/Post-vehicle-->
+<!--Brands-->
+@Html.Partial("_PopularBrandsLayout")
+<!-- /Brands-->
+
+<style>
+    .image-preview-container {
+        display: inline-block;
+        position: relative;
+        margin: 5px;
+    }
+
+    .image-preview {
+        max-width: 150px;
+        max-height: 150px;
+    }
+
+    .delete-icon {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: rgba(255, 0, 0, 0.8);
+        color: white;
+        border-radius: 50%; /* Çember şekli için border-radius */
+        cursor: pointer;
+        line-height: 25px; /* Line-height ile yükseklik ve genişlik eşitlendi */
+        width: 25px;
+        height: 25px;
+        text-align: center;
+    }
+</style>
+
+
+
+<script>
+    // jQuery olmadan özelleştirilmiş form denetimi
+    document.addEventListener('DOMContentLoaded', function () {
+        const forms = document.querySelectorAll('.needs-validation');
+
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+
+                form.classList.add('was-validated');
+            }, false);
+        });
+    });
+
+</script>
+
+<script>
+
+    // İhtiyacınız olan lat ve lng değişkenlerini burada tanımlayın
+    var selectedLat = '@Model.CarRequest.Car.Latitude';
+    var selectedLng = '@Model.CarRequest.Car.Longitude';
+
+    var map = L.map('map').setView([selectedLat, selectedLng], 15);
+    var marker;
+
+    console.log(selectedLat);
+
+    // Başlangıç işaretçisi
+    var initialMarker = L.marker([selectedLat, selectedLng]).addTo(map)
+        .openPopup();
+
+    // Tıklamayı sadece bir kez yapılacak şekilde izlemek için bir bayrak
+    var isFirstClick = true;
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19
+    }).addTo(map);
+
+    map.on('click', function (e) {
+        // Eğer ilk tıklama ise, başlangıç işaretçisini kaldır
+        if (isFirstClick) {
+            map.removeLayer(initialMarker);
+            isFirstClick = false; // İlk tıklama yapıldı, artık bayrağı false yap
+        }
+
+        // Önceki işaretçiyi kaldır
+        if (marker) {
+            map.removeLayer(marker);
+        }
+
+        // Yeni işaretçi ekle
+        marker = L.marker(e.latlng).addTo(map);
+
+        // Seçilen lat ve lng'yi güncelle
+        selectedLat = e.latlng.lat;
+        selectedLng = e.latlng.lng; 
+
+    });
+
+
+    $(document).ready(function () {
+        $("#updateCar").submit(async function (event) {
+            // Formun standart gönderimini engelle
+            event.preventDefault();
+
+            // Form verilerini al
+            var formData = new FormData(this);
+
+            // Önceden tanımladığımız selectedLat ve selectedLng değişkenlerini kullan
+            formData.append('Car.Latitude', selectedLat);
+            formData.append('Car.Longitude', selectedLng);
+
+            formData.append('Car.CarId', '@Model.CarRequest.Car.CarId');
+
+            if (!isFirstClick) {
+                try {
+                    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${selectedLat}&lon=${selectedLng}`);
+                    const data = await response.json();
+                    var address = data.address;
+                    var formattedAddress = `${address.province || ''} ${address.town || ''}`;
+                    formData.append('Car.Location', formattedAddress);
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+            else {
+                formData.append('Car.Location', '@Model.CarRequest.Car.Location');
+            }
+            
+
+            $.ajax({
+                url: '/UpdateCar/UpdateCar',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.isSuccess) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Arabayı güncellediniz.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then((result) => {
+                            window.location.href = "/MyCars";
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lütfen bilgilerinizi kontrol edin',
+                        });
+                    }
+                },
+                error: function (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Bir hata oluştu, lütfen daha sonra tekrar deneyin.'
+                    });
+                    console.error("Form gönderilirken bir hata oluştu.", error);
+                }
+            });
+        });
+    });
+
+
+
+    var uploadedImageCount = 0;
+
+    function createImagePreviewForFile(file) {
+        var imagePreviewContainer = document.createElement('div');
+        imagePreviewContainer.classList.add('image-preview-container');
+
+        var img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.classList.add('image-preview');
+
+        var deleteIcon = document.createElement('span');
+        deleteIcon.innerHTML = '<i class="fa fa-times"></i>';
+        deleteIcon.classList.add('delete-icon');
+        deleteIcon.onclick = function () {
+            imagePreviewContainer.remove();
+            uploadedImageCount--;
+        };
+
+        imagePreviewContainer.appendChild(img);
+        imagePreviewContainer.appendChild(deleteIcon);
+
+        return imagePreviewContainer;
+    }
+
+    function createImagePreviewForURL(url, imageId) {
+        var imagePreviewContainer = document.createElement('div');
+        imagePreviewContainer.classList.add('image-preview-container');
+
+        var img = document.createElement('img');
+        img.src = '/images/' + url;
+        img.classList.add('image-preview');
+
+        var deleteIcon = document.createElement('span');
+        deleteIcon.innerHTML = '<i class="fa fa-times"></i>';
+        deleteIcon.classList.add('delete-icon');
+        deleteIcon.onclick = function () {
+
+            // AJAX isteğini gönder
+            fetch('/UpdateCar/Delete/' + imageId, {
+                method: 'DELETE'
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.isSuccess) {
+                        imagePreviewContainer.remove();
+                        uploadedImageCount--;
+                        alert('Resim başarıyla silindi.');
+                    } else {
+                        alert('Resim silinirken bir hata oluştu.');
+                    }
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error.message);
+                    alert('Resim silinirken bir hata oluştu.');
+                });
+
+        };
+
+        imagePreviewContainer.appendChild(img);
+        imagePreviewContainer.appendChild(deleteIcon);
+
+        return imagePreviewContainer;
+    }
+
+
+
+    function loadExistingImages(images) {
+        var imagePreview = document.getElementById('imagePreview');
+
+        for (var i = 0; i < images.length; i++) {
+            var imagePreviewContainer = createImagePreviewForURL(images[i].imagePath, images[i].id); // "imagePath" ve "id" değerleriyle fonksiyon çağrılıyor
+            imagePreview.appendChild(imagePreviewContainer);
+            uploadedImageCount++;
+        }
+    }
+
+    document.getElementById('fileInput').addEventListener('change', function (event) {
+        var imagePreview = document.getElementById('imagePreview');
+
+        for (var i = 0; i < event.target.files.length; i++) {
+            var file = event.target.files[i];
+            if (file.type.match('image/jpeg') || file.type.match('image/png')) {
+                if (uploadedImageCount >= 20) {
+                    alert("En fazla 20 resim yükleyebilirsiniz.");
+                    return;
+                }
+
+                var imagePreviewContainer = createImagePreviewForFile(file);
+                imagePreview.appendChild(imagePreviewContainer);
+
+                uploadedImageCount++;
+            } else {
+                alert("Yalnızca JPG ve PNG formatında resim yükleyebilirsiniz.");
+            }
+        }
+    });
+
+</script>
+<script>
+    var carImagesData = @Html.Raw(Json.Serialize(Model.CarImages));
+    loadExistingImages(carImagesData);
+</script>
+
