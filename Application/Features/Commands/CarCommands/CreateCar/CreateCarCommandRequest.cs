@@ -9,5 +9,6 @@ namespace Application.Features.Commands.CarCommands.CreateCar
     {
         public List<IFormFile> Files { get; set; }
         public CreateCarDTO Car { get; set; }
+        public int CoverIndex { get; set; }
     }
 }

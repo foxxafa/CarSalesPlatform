@@ -49,7 +49,7 @@ namespace CarSalesPlatformMVC.Areas.Website.Controllers
             {
                 request.CarId = car.Id.ToString();
                 var imageResponse = await _mediator.Send(request);
-                imagePathList.Add(imageResponse.Data.FirstOrDefault().ImagePath);
+                imagePathList.Add(imageResponse.Data.SingleOrDefault(x=>x.IsCover==true).ImagePath);
             }
 
             var viewModel = new MyCarsPageVM

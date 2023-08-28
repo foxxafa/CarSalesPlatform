@@ -51,7 +51,7 @@
     <div class="container">
         <div class="main_bg white-text">
             <h3>Find Your Dream Car</h3>
-            <form action="#" method="get">
+            <form id="filterForm">
                 <div class="row">
                     <div class="form-group col-md-3 col-sm-6">
                         <div class="select">
@@ -109,8 +109,8 @@
                         </div>
                     </div>
                     <div class="form-group col-md-6 col-sm-6">
-                        <label class="form-label">Price Range ($) </label>
-                        <input id="price_range" type="text" class="span2" value="" data-slider-min="50" data-slider-max="6000" data-slider-step="5" data-slider-value="[50,6000]" />
+                        @*Slider*@
+                        @Html.Partial("_priceSliderLayout")
                     </div>
                     <div class="form-group col-md-3 col-sm-6">
                         <button type="submit" class="btn btn-block"><i class="fa fa-search" aria-hidden="true"></i> Search Car </button>
@@ -253,8 +253,15 @@
 <!-- /Help-Number-->
 
 <script>
+
+    // noktalı sayıyı normal sayıya dönüştürür 212.231 => 212231
+    function parseNumberWithDots(str) {
+        return parseInt(str.replace(/\./g, ''));
+    }
+
+
     $(document).ready(function () {
-        $('form').on('submit', function (e) {
+        $('#filterForm').on('submit', function (e) {
             e.preventDefault();
 
             var color = $("select[name='color']").val() || null;
@@ -263,9 +270,11 @@
             var fuelType = $("select[name='fuelType']").val() || null;
             var gearType = $("select[name='gearType']").val() || null;
 
-            var priceRange = $('#price_range').val();
-            var minPrice = parseInt(priceRange.split(',')[0]);
-            var maxPrice = parseInt(priceRange.split(',')[1]);
+            var tooltipValue = $('.tooltip-inner').text();
+            var values = tooltipValue.split(' : ');
+            var minPrice = parseNumberWithDots(values[0]);
+            var maxPrice = parseNumberWithDots(values[1]);
+
 
             localStorage.setItem('color', color);
             localStorage.setItem('brand', brand);
@@ -273,8 +282,8 @@
             localStorage.setItem('fuelType', fuelType);
             localStorage.setItem('gearType', gearType);
 
-            localStorage.setItem('minPrice',minPrice);
-            localStorage.setItem('maxPrice',maxPrice);
+            localStorage.setItem('minPrice', minPrice);
+            localStorage.setItem('maxPrice', maxPrice);
 
             // Diğer sayfaya yönlendir
             window.location.href = '/Cars';

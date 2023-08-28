@@ -52,14 +52,9 @@ namespace CarSalesPlatformMVC.Areas.Website.Controllers
                 var imagesRequest = new GetImagesByCarIdQueryRequest { CarId = Id };
                 var imagesResponse = await _mediator.Send(imagesRequest);
 
-
-                var viewModel = new CarUpdateViewModel
+                var viewModel = new CarCreateUpdateFormVM
                 {
-                    CarRequest = new UpdateCarCommandRequest()
-                    { 
-                        Car= CarDto,
-                        //Files
-                    },
+                    Car = CarDto,
                     CarImages = imagesResponse.Data
                 };
                 return View(viewModel);

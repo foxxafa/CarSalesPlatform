@@ -1,7 +1,7 @@
 ﻿@using Domain.Entities;
-@using Application.Features.Commands.CarCommands.CreateCar;
+@using CarSalesPlatformMVC.Areas.Website.Models.ViewModels;
 
-@model CreateCarCommandRequest;
+@model CarCreateUpdateFormVM;
 
 @{
     ViewData["Title"] = "Index";
@@ -179,7 +179,6 @@
                             </div>
                         </div>
 
-                        @*BAŞLIK*@
                         <div class="form-group">
                             <label class="control-label">Araba için başlık</label>
                             <input class="form-control white_bg" name="Car.CarHeader" id="CarHeader" type="text" required>
@@ -245,7 +244,6 @@
                         </div>
                         <div class="vehicle_accessories">
                             <div class="form-group checkbox col-md-6 accessories_list">
-                                @*<input type="hidden" name="airConditioner" value="false">*@
                                 <input id="air_conditioner" name="Car.airConditioner" type="checkbox" value="true">
                                 <label for="air_conditioner">Klima</label>
                             </div>
@@ -315,6 +313,7 @@
     </div>
 </section>
 <!--/Post-vehicle-->
+
 <!--Brands-->
 @Html.Partial("_PopularBrandsLayout")
 <!-- /Brands-->
@@ -383,14 +382,14 @@
                 coverIndex = 0;  
             }
 
-            formData.append('Car.CoverIndex', coverIndex);
-
             // Form verilerini al
             var formData = new FormData(this);
 
             // Önceden tanımladığımız selectedLat ve selectedLng değişkenlerini kullan
             formData.append('Car.Latitude', selectedLat);
             formData.append('Car.Longitude', selectedLng);
+
+            formData.append('CoverIndex', coverIndex);
 
             // Ters coğrafi kodlama yap ve adresi güncelle
             fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${selectedLat}&lon=${selectedLng}`)

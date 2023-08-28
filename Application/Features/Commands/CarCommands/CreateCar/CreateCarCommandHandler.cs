@@ -34,7 +34,7 @@ namespace Application.Features.Commands.CarCommands.CreateCar
 
             if (result.IsSuccess)
             {
-                await _carImageService.SaveImagesForCarAsync(carEntity.Id.ToString(), request.Files);
+                await _carImageService.SaveImagesForCarAsync(carEntity.Id.ToString(), request.Files,request.CoverIndex);
                 return new SuccessResult("Resimler kaydedildi");
             }
             else

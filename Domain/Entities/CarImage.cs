@@ -7,5 +7,6 @@ namespace Domain.Entities
         public string ImagePath { get; set; }  // Burada resmin yolu veya adı saklanabilir.
         public Guid CarId { get; set; } 
         public Car Car { get; set; }
+        public bool IsCover { get; set; }
     }
 }

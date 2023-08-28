@@ -5,6 +5,6 @@ namespace Application.Abstractions.Services
 {
     public interface ICarImageService
     {
-        Task<Result> SaveImagesForCarAsync(string carId, List<IFormFile> images);
+        Task<Result> SaveImagesForCarAsync(string carId, List<IFormFile> images,int CoverIndex);
     }
 }

@@ -21,7 +21,7 @@ namespace Persistence.Services
             _carImageWriteRepository = carImageWriteRepository;
         }
 
-        public async Task<Result> SaveImagesForCarAsync(string carId, List<IFormFile> images)
+        public async Task<Result> SaveImagesForCarAsync(string carId, List<IFormFile> images,int coverIndex)
         {
             var car = await _carReadRepositories.GetByIdAsync(carId);
 
@@ -35,8 +35,10 @@ namespace Persistence.Services
 
             if(images!=null)
             {
+                int syc = 0;
                 foreach (var image in images)
                 {
+                    bool IsCover=false;
                     var guid = Guid.NewGuid();
                     var uniqueFileName = guid.ToString() + "_" + image.FileName;
                     var imagePath = Path.Combine(imagesFolder, uniqueFileName);
@@ -44,11 +46,17 @@ namespace Persistence.Services
                     using var fileStream = new FileStream(imagePath, FileMode.Create);
                     await image.CopyToAsync(fileStream);
 
+                    if(syc==coverIndex)
+                        IsCover = true;
+
+                    syc++;
+
                     var newCarImage = new CarImage
                     {
                         ImagePath = uniqueFileName,
-                        Car = car,
-                        Id = guid
+                        CarId = car.Id,
+                        Id = guid,
+                        IsCover=IsCover,
                     };
 
                     // Assuming you have an Add method in your ICarImageWriteRepository

@@ -3,6 +3,7 @@ using Application.Features.Commands.CarCommands.CreateCar;
 using Application.Results;
 using AutoMapper;
 using CarSalesPlatformMVC.Areas.Website.Attributes;
+using CarSalesPlatformMVC.Areas.Website.Models.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,15 +37,21 @@ namespace CarSalesPlatformMVC.Areas.Website.Controllers
 
         [HttpPost("[controller]/[action]")]
         [ValidateModel]
-        public async Task<IActionResult> CreateCar(CreateCarCommandRequest request)
+        public async Task<IActionResult> CreateCar(CarCreateUpdateFormVM model)
         {
             var userId = HttpContext.Items["UserId"] as Guid?;
             if (userId.HasValue)
-                request.Car.UserId = userId.Value;
+                model.Car.UserId = userId.Value;
             else
                 return View(new ErrorResult("Kullanıcı kimliği çözümlenemedi"));
 
-            Result response = await _mediator.Send(request);
+            CreateCarCommandRequest createCarCommandRequest = new CreateCarCommandRequest();
+
+            createCarCommandRequest.Car=model.Car;
+            createCarCommandRequest.Files = model.Files;
+            createCarCommandRequest.CoverIndex = model.CoverIndex;
+
+            Result response = await _mediator.Send(createCarCommandRequest);
 
             if (response.IsSuccess)
                 return Ok(response);

@@ -324,7 +324,6 @@
         </div>
     </div>
     <!--/Forgot-password-Form -->
-
     @RenderBody()
 
 
@@ -414,6 +413,18 @@
     </footer>
 
     <script>
+        document.addEventListener('keydown', function (event) {
+            // Eğer tuş "Enter" ise ve modal pencere açık ise
+            if (event.key === "Enter" && $('#loginform').hasClass('show')) {
+                event.preventDefault();
+                // Modalda ki formu gönder
+                document.getElementById('loginForm').dispatchEvent(new Event('submit', { 'bubbles': true }));
+            }
+        });
+
+    </script>
+
+    <script>
         $(document).ready(function () {
             $('#signupForm').on('submit', function (event) {
                 event.preventDefault();
@@ -428,7 +439,7 @@
                             $('#loginform').modal('show');
                             $('#signupFormserverError').text('İşlem başarılı').removeClass('text-danger').addClass('text-success');
                         } else {
-                            if(response.message)
+                            if (response.message)
                                 $('#signupFormserverError').text(response.message).removeClass('text-success').addClass('text-danger');
                             else
                                 $('#signupFormserverError').text(response.errors[0]).removeClass('text-success').addClass('text-danger');
@@ -496,6 +507,6 @@
     </script>
 
 
-    
+
 </body>
 </html>

@@ -16,6 +16,8 @@
         height: 180px;
     }
 
+
+
 </style>
 
 <!--Page Header-->
@@ -71,7 +73,7 @@
                         <h5><i class="fa fa-filter" aria-hidden="true"></i> Hayalindeki Arabayı Bul </h5>
                     </div>
                     <div class="sidebar_filter">
-                        <form action="#" method="get">
+                        <form id="carsFilterForm">
                             <div class="form-group select">
                                 <div class="form-group select">
                                     <select class="form-control">
@@ -121,8 +123,8 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="form-label">Price Range ($) </label>
-                                    <input id="price_range" type="text" class="span2" value="" data-slider-min="50" data-slider-max="6000" data-slider-step="5" data-slider-value="[1000,5000]" />
+                                    @*Slider*@
+                                    @Html.Partial("_priceSliderLayout")
                                 </div>
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-block"><i class="fa fa-search" aria-hidden="true"></i> Search Car</button>
@@ -224,7 +226,7 @@
                 </div>
                 <div class="product-listing-content">
                     <h5><a href="/CarDetails/${car.carId}">${car.name}</a></h5>
-                    <p class="list-price">$${car.price}</p>
+                    <p class="list-price">${car.price} TL</p>
                     <div class="car-location"><span><i class="fa fa-map-marker" aria-hidden="true"></i> ${car.location}</span></div>
                     <ul class="features_list">
                         <li><i class="fa fa-road" aria-hidden="true"></i>${car.mileage} km</li>
@@ -246,6 +248,12 @@
     }
 </script>
 <script>
+    // noktalı sayıyı normal sayıya dönüştürür 212.231 => 212231
+    function parseNumberWithDots(str) {
+        return parseInt(str.replace(/\./g, ''));
+    }
+
+
     function updatePagination(currentPage, totalPages) {
         var paginationHtml = "";
         for (var i = 1; i <= totalPages; i++) {
@@ -286,18 +294,18 @@
 
             localStorage.removeItem('minPrice');
 
-            fetchCars(color, brand, category, fueltype, gearType, 50, 6000, 1);
+            fetchCars(color, brand, category, fueltype, gearType, minPrice, maxPrice, 1);
         }
         else
         {
             var urlParams = new URLSearchParams(window.location.search);
             var page = urlParams.get('page') || 1;
             //slider değerleri min 50 max 6000
-            fetchCars(null, null, null, null, null, 50, 6000, page);
+            fetchCars(null, null, null, null, null, 1, 999999999, page);
         }
 
 
-        $('form').on('submit', function (e) {
+        $('#carsFilterForm').on('submit', function (e) {
             e.preventDefault();
 
             var color = $("select[name='color']").val();
@@ -305,9 +313,12 @@
             var category = $("select[name='category']").val();
             var fuelType = $("select[name='fuelType']").val();
             var gearType = $("select[name='gearType']").val();
-            var priceRange = $('#price_range').val();
-            var minPrice = parseInt(priceRange.split(',')[0]);
-            var maxPrice = parseInt(priceRange.split(',')[1]);
+
+            var tooltipValue = $('.tooltip-inner').text();
+            var values = tooltipValue.split(' : ');
+            var minPrice = parseNumberWithDots(values[0]);
+            var maxPrice = parseNumberWithDots(values[1]);
+
 
             fetchCars(color, brand, category, fuelType, gearType, minPrice, maxPrice, 1);
         });

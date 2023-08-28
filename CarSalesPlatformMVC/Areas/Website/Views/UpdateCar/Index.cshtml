@@ -2,7 +2,7 @@
 @using CarSalesPlatformMVC.Areas.Website.Models.ViewModels;
 
 
-@model CarUpdateViewModel
+@model CarCreateUpdateFormVM
 
 @{
     ViewData["Title"] = "Index";
@@ -33,15 +33,8 @@
 <section class="user_profile inner_pages">
     <div class="container">
         <div class="row">
-            <div class="col-md-2 col-sm-2">
-                <div class="profile_nav">
-                    <ul>
-                        <li><a href="profile-settings.html">Profil Ayarları</a></li>
-                        <li><a href="my-vehicles.html">Arabalarım</a></li>
-                        <li class="active"><a href="post-vehicle.html">Araba Yayınla</a></li>
-                        <li><a href="#">Çıkış Yap</a></li>
-                    </ul>
-                </div>
+            <div class="col-md-2 col-sm-4">
+                @Html.Partial("_ProfileNavView")
             </div>
             <div class="col-md-9 col-sm-8">
                 <div class="profile_wrap">
@@ -49,8 +42,7 @@
                     <form id="updateCar" asp-area="Website" asp-controller="UpdateCar" asp-action="UpdateCar" method="post" enctype="multipart/form-data">
                         <div class="form-group">
                             <label class="control-label">Araba Adı</label>
-                            <input type="hidden" name="CarId" value="@Model.CarRequest.Car.CarId" />
-                            <input class="form-control white_bg" id="VehiclesTitle" name="Car.Name" type="text" value="@Model.CarRequest.Car.Name">
+                            <input class="form-control white_bg" id="VehiclesTitle" name="Car.Name" type="text" value="@Model.Car.Name">
 
                         </div>
                         <div class="form-group">
@@ -60,7 +52,7 @@
                                     <option>Marka Seçin</option>
                                     @foreach (var brand in ViewBag.Brands as List<Brand>)
                                     {
-                                        if (Model.CarRequest.Car.BrandId == brand.Id)
+                                        if (Model.Car.BrandId == brand.Id)
                                         {
                                             <option value="@brand.Id" selected="selected">@brand.Name</option>
                                         }
@@ -81,7 +73,7 @@
                                     <option>Kategori Seçin</option>
                                     @foreach (var category in ViewBag.Categories as List<Category>)
                                     {
-                                        if (Model.CarRequest.Car.CategoryId == category.Id)
+                                        if (Model.Car.CategoryId == category.Id)
                                         {
                                             <option value="@category.Id" selected="selected">@category.Name</option>
                                         }
@@ -100,7 +92,7 @@
                                     <option>Renk Seçin</option>
                                     @foreach (var color in ViewBag.Colors as List<Color>)
                                     {
-                                        if (Model.CarRequest.Car.ColorId == color.Id)
+                                        if (Model.Car.ColorId == color.Id)
                                         {
                                             <option value="@color.Id" selected="selected">@color.Name</option>
                                         }
@@ -119,7 +111,7 @@
                                     <option>Yakıt türü seçin</option>
                                     @foreach (var fuelType in ViewBag.FuelTypes as List<FuelType>)
                                     {
-                                        if (Model.CarRequest.Car.FuelTypeId == fuelType.Id)
+                                        if (Model.Car.FuelTypeId == fuelType.Id)
                                         {
                                             <option value="@fuelType.Id" selected="selected">@fuelType.Type</option>
                                         }
@@ -138,7 +130,7 @@
                                     <option>Vites türü seçin</option>
                                     @foreach (var gearType in ViewBag.GearTypes as List<GearType>)
                                     {
-                                        if (Model.CarRequest.Car.GearTypeId == gearType.Id)
+                                        if (Model.Car.GearTypeId == gearType.Id)
                                         {
                                             <option value="@gearType.Id" selected="selected">@gearType.Type</option>
                                         }
@@ -154,16 +146,16 @@
                         @*BAŞLIK*@
                         <div class="form-group">
                             <label class="control-label">Araba için başlık</label>
-                            <input class="form-control white_bg" name="Car.CarHeader" id="CarHeader" type="text" asp-for="@Model.CarRequest.Car.CarHeader" required>
+                            <input class="form-control white_bg" name="Car.CarHeader" id="CarHeader" type="text" asp-for="@Model.Car.CarHeader" required>
                         </div>
 
                         <div class="form-group">
                             <label class="control-label">Araba için açıklama</label>
-                            <textarea name="Car.Description" class="form-control white_bg" rows="4" asp-for="@Model.CarRequest.Car.Description"></textarea>
+                            <textarea name="Car.Description" class="form-control white_bg" rows="4" asp-for="@Model.Car.Description"></textarea>
                         </div>
                         <div class="form-group">
                             <label class="control-label">Fiyat ($)</label>
-                            <input class="form-control white_bg" name="Car.Price" id="Price" type="text" asp-for="@Model.CarRequest.Car.Price">
+                            <input class="form-control white_bg" name="Car.Price" id="Price" type="text" asp-for="@Model.Car.Price">
                         </div>
 
                         @*-------------------------------------------------------------*@
@@ -185,26 +177,26 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label">Model Yılı</label>
-                            <input class="form-control white_bg" name="Car.Year" id="year" type="text" asp-for="@Model.CarRequest.Car.Year">
+                            <input class="form-control white_bg" name="Car.Year" id="year" type="text" asp-for="@Model.Car.Year">
                         </div>
                         <div class="form-group">
                             <label class="control-label">Yakıt Deposu (MAX LT)</label>
-                            <input class="form-control white_bg" name="Car.FuelTankCapacity" id="FuelTankCapacity" type="text" asp-for="@Model.CarRequest.Car.FuelTankCapacity">
+                            <input class="form-control white_bg" name="Car.FuelTankCapacity" id="FuelTankCapacity" type="text" asp-for="@Model.Car.FuelTankCapacity">
                         </div>
                         <div class="form-group">
                             <label class="control-label">KM</label>
-                            <input class="form-control white_bg" name="Car.Mileage" id="kws" type="text" asp-for="@Model.CarRequest.Car.Mileage">
+                            <input class="form-control white_bg" name="Car.Mileage" id="kws" type="text" asp-for="@Model.Car.Mileage">
                         </div>
                         <div class="gray-bg field-title">
                             <h6>Teknik Özellikler</h6>
                         </div>
                         <div class="form-group">
                             <label class="control-label">Motor Açıklaması</label>
-                            <input class="form-control white_bg" name="Car.EngineDescription" id="engien-description" type="text" asp-for="@Model.CarRequest.Car.EngineDescription">
+                            <input class="form-control white_bg" name="Car.EngineDescription" id="engien-description" type="text" asp-for="@Model.Car.EngineDescription">
                         </div>
                         <div class="form-group">
                             <label class="control-label">Koltuk Sayısı</label>
-                            <input class="form-control white_bg" name="Car.SeatCount" id="s-capacity" type="text" asp-for="@Model.CarRequest.Car.SeatCount">
+                            <input class="form-control white_bg" name="Car.SeatCount" id="s-capacity" type="text" asp-for="@Model.Car.SeatCount">
                         </div>
                         <div class="gray-bg field-title">
                             <h6>Aksesuarlar</h6>
@@ -212,59 +204,59 @@
                         <div class="vehicle_accessories">
                             <div class="form-group checkbox col-md-6 accessories_list">
                                 @*<input type="hidden" name="airConditioner" value="false">*@
-                                <input id="air_conditioner" name="Car.airConditioner" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.airConditioner">
+                                <input id="air_conditioner" name="Car.airConditioner" type="checkbox" value="true" asp-for="@Model.Car.airConditioner">
                                 <label for="air_conditioner">Klima</label>
                             </div>
                             <div class="form-group checkbox col-md-6 accessories_list">
-                                <input id="door" name="Car.door" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.door">
+                                <input id="door" name="Car.door" type="checkbox" value="true" asp-for="@Model.Car.door">
                                 <label for="door">Elektrikli Kapı Kilidi</label>
                             </div>
                             <div class="form-group checkbox col-md-6 accessories_list">
-                                <input id="antiLock" name="Car.antiLock" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.antiLock">
+                                <input id="antiLock" name="Car.antiLock" type="checkbox" value="true" asp-for="@Model.Car.antiLock">
                                 <label for="antiLock">Anti Blokaj Fren Sistemi</label>
                             </div>
                             <div class="form-group checkbox col-md-6 accessories_list">
-                                <input id="brake" name="Car.brake" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.brake">
+                                <input id="brake" name="Car.brake" type="checkbox" value="true" asp-for="@Model.Car.brake">
                                 <label for="brake">Fren Asistanı</label>
                             </div>
                             <div class="form-group checkbox col-md-6 accessories_list">
-                                <input id="steering" name="Car.steering" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.steering">
+                                <input id="steering" name="Car.steering" type="checkbox" value="true" asp-for="@Model.Car.steering">
                                 <label for="steering">Hidrolik Direksiyon</label>
                             </div>
                             <div class="form-group checkbox col-md-6 accessories_list">
-                                <input id="airbag" name="Car.airbag" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.airbag">
+                                <input id="airbag" name="Car.airbag" type="checkbox" value="true" asp-for="@Model.Car.airbag">
                                 <label for="airbag">Sürücü Hava Yastığı</label>
                             </div>
                             <div class="form-group checkbox col-md-6 accessories_list">
-                                <input id="windows" name="Car.windows" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.windows">
+                                <input id="windows" name="Car.windows" type="checkbox" value="true" asp-for="@Model.Car.windows">
                                 <label for="windows">Elektrikli Pencereler</label>
                             </div>
                             <div class="form-group checkbox col-md-6 accessories_list">
-                                <input id="passenger_airbag" name="Car.passengerAirbag" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.passengerAirbag">
+                                <input id="passenger_airbag" name="Car.passengerAirbag" type="checkbox" value="true" asp-for="@Model.Car.passengerAirbag">
                                 <label for="passenger_airbag">Yolcu Hava Yastığı</label>
                             </div>
                             <div class="form-group checkbox col-md-6 accessories_list">
-                                <input id="player" name="Car.player" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.player">
+                                <input id="player" name="Car.player" type="checkbox" value="true" asp-for="@Model.Car.player">
                                 <label for="player">CD Çalar</label>
                             </div>
                             <div class="form-group checkbox col-md-6 accessories_list">
-                                <input id="sensor" name="Car.sensor" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.sensor">
+                                <input id="sensor" name="Car.sensor" type="checkbox" value="true" asp-for="@Model.Car.sensor">
                                 <label for="sensor">Çarpışma Sensörü</label>
                             </div>
                             <div class="form-group checkbox col-md-6 accessories_list">
-                                <input id="seats" name="Car.seats" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.seats">
+                                <input id="seats" name="Car.seats" type="checkbox" value="true" asp-for="@Model.Car.seats">
                                 <label for="seats">Deri Koltuk</label>
                             </div>
                             <div class="form-group checkbox col-md-6 accessories_list">
-                                <input id="engine_warning" name="Car.engineWarning" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.engineWarning">
+                                <input id="engine_warning" name="Car.engineWarning" type="checkbox" value="true" asp-for="@Model.Car.engineWarning">
                                 <label for="engine_warning">Motor Kontrol Uyarısı</label>
                             </div>
                             <div class="form-group checkbox col-md-6 accessories_list">
-                                <input id="locking" name="Car.locking" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.locking">
+                                <input id="locking" name="Car.locking" type="checkbox" value="true" asp-for="@Model.Car.locking">
                                 <label for="locking">Merkezi Kilitlenme</label>
                             </div>
                             <div class="form-group checkbox col-md-6 accessories_list">
-                                <input id="headlamps" name="Car.headlamps" type="checkbox" value="true" asp-for="@Model.CarRequest.Car.headlamps">
+                                <input id="headlamps" name="Car.headlamps" type="checkbox" value="true" asp-for="@Model.Car.headlamps">
                                 <label for="headlamps">Atomatik Far</label>
                             </div>
                         </div>
@@ -333,8 +325,8 @@
 <script>
 
     // İhtiyacınız olan lat ve lng değişkenlerini burada tanımlayın
-    var selectedLat = '@Model.CarRequest.Car.Latitude';
-    var selectedLng = '@Model.CarRequest.Car.Longitude';
+    var selectedLat = '@Model.Car.Latitude';
+    var selectedLng = '@Model.Car.Longitude';
 
     var map = L.map('map').setView([selectedLat, selectedLng], 15);
     var marker;
@@ -386,7 +378,7 @@
             formData.append('Car.Latitude', selectedLat);
             formData.append('Car.Longitude', selectedLng);
 
-            formData.append('Car.CarId', '@Model.CarRequest.Car.CarId');
+            formData.append('Car.CarId', '@Model.Car.CarId');
 
             if (!isFirstClick) {
                 try {
@@ -400,7 +392,7 @@
                 }
             }
             else {
-                formData.append('Car.Location', '@Model.CarRequest.Car.Location');
+                formData.append('Car.Location', '@Model.Car.Location');
             }
             
 
