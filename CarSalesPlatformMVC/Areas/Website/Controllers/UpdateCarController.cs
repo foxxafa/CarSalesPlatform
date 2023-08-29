@@ -66,13 +66,19 @@ namespace CarSalesPlatformMVC.Areas.Website.Controllers
 
         [HttpPost("[controller]/[action]")]
         [ValidateModel]
-        public async Task<IActionResult> UpdateCar(UpdateCarCommandRequest request)
+        public async Task<IActionResult> UpdateCar(CarCreateUpdateFormVM model)
         {
             var userId = HttpContext.Items["UserId"] as Guid?;
-            if (!userId.HasValue)
+            if (userId.HasValue)
+                model.Car.UserId = userId.Value;
+            else
                 return View(new ErrorResult("Kullanıcı kimliği çözümlenemedi"));
 
-            request.Car.UserId = userId.Value;
+            UpdateCarCommandRequest request = new UpdateCarCommandRequest();
+
+            request.Car = model.Car;
+            request.Files = model.Files;
+            request.CoverIndex = model.CoverIndex;
 
             Result response = await _mediator.Send(request);
 

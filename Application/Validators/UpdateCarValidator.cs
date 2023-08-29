@@ -14,7 +14,7 @@ namespace Application.Validators
             RuleFor(x => x.Car.GearTypeId).NotNull().WithMessage("Lütfen Vites Türü Seçin");
 
             RuleFor(x => x.Car.Name).NotNull().WithMessage("Araba için başlık girin");
-            RuleFor(x => x.Car.Name).MinimumLength(50).WithMessage("Daha kısa giriniz");
+            RuleFor(x => x.Car.Name).MaximumLength(50).WithMessage("Daha kısa giriniz");
 
             RuleFor(x => x.Car.Description).NotNull().WithMessage("Lütfen arabaya açıklama girin");
 

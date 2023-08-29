@@ -505,29 +505,6 @@
         return outerDiv;
     }
 
-
-    function createImagePreviewForURL(url) {
-        var imagePreviewContainer = document.createElement('div');
-        imagePreviewContainer.classList.add('image-preview-container');
-
-        var img = document.createElement('img');
-        img.src = '/images/' + url;
-        img.classList.add('image-preview');
-
-        var deleteIcon = document.createElement('span');
-        deleteIcon.innerHTML = '<i class="fa fa-times"></i>';
-        deleteIcon.classList.add('delete-icon');
-        deleteIcon.onclick = function () {
-            imagePreviewContainer.remove();
-            uploadedImageCount--;
-        };
-
-        imagePreviewContainer.appendChild(img);
-        imagePreviewContainer.appendChild(deleteIcon);
-
-        return imagePreviewContainer;
-    }
-
     document.getElementById('fileInput').addEventListener('change', function (event) {
         var imagePreview = document.getElementById('imagePreview');
 

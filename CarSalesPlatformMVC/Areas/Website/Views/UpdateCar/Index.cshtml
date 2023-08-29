@@ -9,6 +9,78 @@
     Layout = "~/Areas/Website/Views/Shared/_websiteLayout.cshtml";
 }
 
+
+
+<style>
+
+    .delete-icon {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: rgba(255, 0, 0, 0.8);
+        color: white;
+        border-radius: 50%; /* Çember şekli için border-radius */
+        cursor: pointer;
+        line-height: 25px; /* Line-height ile yükseklik ve genişlik eşitlendi */
+        width: 25px;
+        height: 25px;
+        text-align: center;
+    }
+
+    .grid_listing {
+        position: relative;
+        height: 150px;
+    }
+
+    .product-listing-m {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+</style>
+
+<style>
+    .img-container {
+        width: 200px; /* istediğiniz genişlik */
+        height: 100px; /* istediğiniz yükseklik */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    .img-fluid {
+        object-fit: cover;
+        max-width: 75%;
+        max-height: 100%;
+    }
+
+</style>
+
+<style>
+    .cover-label {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        width: 100%;
+        text-align: center;
+        font-size: 14px;
+        line-height: 1.4;
+        display: none;
+    }
+
+
+    .cover-icon {
+        color: gold;
+        cursor: pointer;
+        position: absolute;
+        bottom: 5px;
+        left: 5px;
+    }
+</style>
+
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
@@ -36,7 +108,7 @@
             <div class="col-md-2 col-sm-4">
                 @Html.Partial("_ProfileNavView")
             </div>
-            <div class="col-md-9 col-sm-8">
+            <div class="col-md-8 col-sm-8">
                 <div class="profile_wrap">
                     <h5 class="uppercase underline">Yeni Aracı Yayınla</h5>
                     <form id="updateCar" asp-area="Website" asp-controller="UpdateCar" asp-action="UpdateCar" method="post" enctype="multipart/form-data">
@@ -167,7 +239,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="imagePreview"></div>
+                        <div id="imagePreview" class="d-flex flex-wrap">
+                        </div>
 
                         <!-- Harita için div -->
                         <div id="map" style="height: 400px; width: 100%;"></div>
@@ -266,6 +339,9 @@
                     </form>
                 </div>
             </div>
+            <div class="col-md-2">
+                <!-- Üçüncü sütun içeriği -->
+            </div>
         </div>
     </div>
 </section>
@@ -273,34 +349,6 @@
 <!--Brands-->
 @Html.Partial("_PopularBrandsLayout")
 <!-- /Brands-->
-
-<style>
-    .image-preview-container {
-        display: inline-block;
-        position: relative;
-        margin: 5px;
-    }
-
-    .image-preview {
-        max-width: 150px;
-        max-height: 150px;
-    }
-
-    .delete-icon {
-        position: absolute;
-        top: 0;
-        right: 0;
-        background-color: rgba(255, 0, 0, 0.8);
-        color: white;
-        border-radius: 50%; /* Çember şekli için border-radius */
-        cursor: pointer;
-        line-height: 25px; /* Line-height ile yükseklik ve genişlik eşitlendi */
-        width: 25px;
-        height: 25px;
-        text-align: center;
-    }
-</style>
-
 
 
 <script>
@@ -331,8 +379,6 @@
     var map = L.map('map').setView([selectedLat, selectedLng], 15);
     var marker;
 
-    console.log(selectedLat);
-
     // Başlangıç işaretçisi
     var initialMarker = L.marker([selectedLat, selectedLng]).addTo(map)
         .openPopup();
@@ -361,15 +407,159 @@
 
         // Seçilen lat ve lng'yi güncelle
         selectedLat = e.latlng.lat;
-        selectedLng = e.latlng.lng; 
+        selectedLng = e.latlng.lng;
 
     });
+
+    var uploadedImageCount = 0;  // Yüklenen resim sayısını takip etmek için
+    var coverIndex = null;
+    var currentCover;
+    var imageIndices = [];
+
+    function updateCoverIndex(currentImageIndex) {
+        // Eğer silinen fotoğraf kapak fotoğrafı ise, kapak fotoğrafını da sıfırlayın.
+        if (coverIndex === currentImageIndex) {
+            coverIndex = null;
+            currentCover = null;
+        }
+
+        // Kapak fotoğrafı indexini düzelt
+        if (coverIndex !== null && coverIndex > currentImageIndex) {
+            coverIndex--; // Eğer mevcut kapak fotoğrafı indexi, silinen fotoğrafın indexinden büyükse, bir azalt.
+        }
+
+        // Eğer tüm fotoğraflar silindi ise, kapak fotoğrafı indexini null yap
+        if (uploadedImageCount === 0) {
+            coverIndex = null;
+            currentCover = null;
+        }
+    }
+    //--------------------------------------------------
+    function createImagePreview(imageSource, imageId, useAjaxForDeletion = false) {
+        var currentImageIndex = uploadedImageCount;
+        imageIndices.push(currentImageIndex);
+
+        var outerDiv = document.createElement('div');
+        outerDiv.className = 'col-md-3 grid_listing m-0 p-2 d-flex align-items-center position-relative';
+
+        var innerDiv = document.createElement('div');
+        innerDiv.className = 'product-listing-m gray-bg d-flex justify-content-center flex-column align-items-center';
+
+        var imgContainer = document.createElement('div');
+        imgContainer.className = 'img-container';
+
+        var img = document.createElement('img');
+        img.src = imageSource;
+        img.className = 'img-fluid';
+
+        var deleteIcon = document.createElement('span');
+        deleteIcon.innerHTML = '<i class="fa fa-times"></i>';
+        deleteIcon.classList.add('delete-icon');
+
+        deleteIcon.onclick = function () {
+            if (useAjaxForDeletion) {
+                fetch('/UpdateCar/Delete/' + imageId, {
+                    method: 'DELETE'
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.isSuccess) {
+                            outerDiv.remove();
+                            uploadedImageCount--;
+
+                            updateCoverIndex(currentImageIndex);  // Fonksiyonu burada çağırıyoruz
+
+                            alert('Resim başarıyla silindi.');
+                        } else {
+                            alert('Resim silinirken bir hata oluştu.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('There was a problem with the fetch operation:', error.message);
+                        alert('Resim silinirken bir hata oluştu.');
+                    });
+
+            }
+            else {
+                outerDiv.remove();
+                uploadedImageCount--;
+                var indexToRemove = imageIndices.indexOf(currentImageIndex);
+                if (indexToRemove > -1) {
+                    imageIndices.splice(indexToRemove, 1);
+                }
+                updateCoverIndex(currentImageIndex);
+            }
+        };
+
+        var coverLabel = document.createElement('span');
+        coverLabel.innerHTML = 'Kapak Fotoğrafı';
+        coverLabel.classList.add('cover-label');
+
+        var coverIcon = document.createElement('span');
+        coverIcon.innerHTML = '<i class="fa fa-heart"></i>';
+        coverIcon.classList.add('cover-icon');
+        coverIcon.onclick = function () {
+            if (currentCover) {
+                currentCover.style.display = 'none';
+                currentCover.remove();
+            }
+            coverLabel.style.display = 'block';
+            outerDiv.appendChild(coverLabel);
+            currentCover = coverLabel;
+
+            coverIndex = currentImageIndex;
+        };
+
+        var img = document.createElement('img');
+        img.src = imageSource;
+        img.className = 'img-fluid';
+
+        imgContainer.appendChild(img);
+        innerDiv.appendChild(imgContainer);
+        innerDiv.appendChild(deleteIcon);
+        innerDiv.appendChild(coverIcon);
+        outerDiv.appendChild(innerDiv);
+        innerDiv.appendChild(coverLabel);
+
+        return outerDiv;
+    }
+
+    function createImagePreviewForFile(file) {
+        var imageSource = URL.createObjectURL(file);
+        var imagePreviewContainer = createImagePreview(imageSource, null, false);
+        document.getElementById('imagePreview').appendChild(imagePreviewContainer);
+        uploadedImageCount++;
+    }
+
+    function createImagePreviewForURL(url, imageId) {
+        var imageSource = '/images/' + url;
+        var imagePreviewContainer = createImagePreview(imageSource, imageId, true);
+        document.getElementById('imagePreview').appendChild(imagePreviewContainer);
+        uploadedImageCount++;
+    }
 
 
     $(document).ready(function () {
         $("#updateCar").submit(async function (event) {
             // Formun standart gönderimini engelle
             event.preventDefault();
+
+            if (uploadedImageCount < 5) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'En az 5 tane fotoğraf yükleyin.',
+                });
+                return;
+            }
+
+            if (coverIndex === null) {
+                coverIndex = 0;
+            }
 
             // Form verilerini al
             var formData = new FormData(this);
@@ -379,6 +569,7 @@
             formData.append('Car.Longitude', selectedLng);
 
             formData.append('Car.CarId', '@Model.Car.CarId');
+            formData.append('CoverIndex', coverIndex);
 
             if (!isFirstClick) {
                 try {
@@ -394,7 +585,7 @@
             else {
                 formData.append('Car.Location', '@Model.Car.Location');
             }
-            
+
 
             $.ajax({
                 url: '/UpdateCar/UpdateCar',
@@ -431,86 +622,10 @@
         });
     });
 
-
-
-    var uploadedImageCount = 0;
-
-    function createImagePreviewForFile(file) {
-        var imagePreviewContainer = document.createElement('div');
-        imagePreviewContainer.classList.add('image-preview-container');
-
-        var img = document.createElement('img');
-        img.src = URL.createObjectURL(file);
-        img.classList.add('image-preview');
-
-        var deleteIcon = document.createElement('span');
-        deleteIcon.innerHTML = '<i class="fa fa-times"></i>';
-        deleteIcon.classList.add('delete-icon');
-        deleteIcon.onclick = function () {
-            imagePreviewContainer.remove();
-            uploadedImageCount--;
-        };
-
-        imagePreviewContainer.appendChild(img);
-        imagePreviewContainer.appendChild(deleteIcon);
-
-        return imagePreviewContainer;
-    }
-
-    function createImagePreviewForURL(url, imageId) {
-        var imagePreviewContainer = document.createElement('div');
-        imagePreviewContainer.classList.add('image-preview-container');
-
-        var img = document.createElement('img');
-        img.src = '/images/' + url;
-        img.classList.add('image-preview');
-
-        var deleteIcon = document.createElement('span');
-        deleteIcon.innerHTML = '<i class="fa fa-times"></i>';
-        deleteIcon.classList.add('delete-icon');
-        deleteIcon.onclick = function () {
-
-            // AJAX isteğini gönder
-            fetch('/UpdateCar/Delete/' + imageId, {
-                method: 'DELETE'
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.isSuccess) {
-                        imagePreviewContainer.remove();
-                        uploadedImageCount--;
-                        alert('Resim başarıyla silindi.');
-                    } else {
-                        alert('Resim silinirken bir hata oluştu.');
-                    }
-                })
-                .catch(error => {
-                    console.error('There was a problem with the fetch operation:', error.message);
-                    alert('Resim silinirken bir hata oluştu.');
-                });
-
-        };
-
-        imagePreviewContainer.appendChild(img);
-        imagePreviewContainer.appendChild(deleteIcon);
-
-        return imagePreviewContainer;
-    }
-
-
-
     function loadExistingImages(images) {
-        var imagePreview = document.getElementById('imagePreview');
 
         for (var i = 0; i < images.length; i++) {
-            var imagePreviewContainer = createImagePreviewForURL(images[i].imagePath, images[i].id); // "imagePath" ve "id" değerleriyle fonksiyon çağrılıyor
-            imagePreview.appendChild(imagePreviewContainer);
-            uploadedImageCount++;
+            createImagePreviewForURL(images[i].imagePath, images[i].id); // "imagePath" ve "id" değerleriyle fonksiyon çağrılıyor
         }
     }
 

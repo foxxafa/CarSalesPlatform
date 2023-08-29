@@ -36,7 +36,9 @@ namespace Application.Features.Commands.CarCommands.UpdateCar
             _carWriteRepositories.Update(car);
             await _carWriteRepositories.SaveAsync();
 
-            await _imageService.SaveImagesForCarAsync(car.Id.ToString(), request.Files,request.CoverIndex);
+            await _imageService.SaveImagesForCarAsync(car.Id.ToString(), request.Files);
+
+            await _imageService.SetCarCoverImage(car.Id.ToString(),request.CoverIndex);
 
             return new SuccessResult("Araba güncellendi");
         }
