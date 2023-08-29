@@ -30,13 +30,6 @@ namespace CarSalesPlatformMVC.Areas.Website.Controllers
             return View();
         }
 
-        [HttpPost("[controller]/[action]")]
-        public async Task<IActionResult> HomeToCars()
-        {
-            // gelen bilgileri çekip view içinden istediğim sayfaya gönderip orda işlenmesini istiyorum ancak sayfaya gönderildiğinde birtane fonksiyonun çalışmasını istiyorum onu nasıl yapacağım emin değilim
-            return View();
-        }
-
         [HttpGet("[controller]/[action]")]
         public async Task<IActionResult> GetFiltredCars(GetCarsByFilterQueryRequest request)
         {
@@ -56,7 +49,7 @@ namespace CarSalesPlatformMVC.Areas.Website.Controllers
             {
                 imageRequest.CarId = car.CarId.ToString();
                 var imageResponse = await _mediator.Send(imageRequest);
-                imagePathList.Add(imageResponse.Data.FirstOrDefault().ImagePath);
+                imagePathList.Add(imageResponse.Data.SingleOrDefault(x=> x.IsCover==true).ImagePath);
             }
 
             var viewModel = new CarsPageCarVM

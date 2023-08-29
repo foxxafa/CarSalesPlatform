@@ -31,10 +31,16 @@ namespace Persistence.Services
             request.CarId = carId;
             var carimages = await _mediator.Send(request);
 
-            carimages.Data.Where(x => x.IsCover == true).SingleOrDefault().IsCover = false;
-
             if (carimages.IsSuccess) 
             {
+                // Mevcut kapak fotoğrafını bul ve IsCover özelliğini false yap
+                var currentCoverImage = carimages.Data.Where(x => x.IsCover == true).SingleOrDefault();
+                if (currentCoverImage != null)
+                {
+                    currentCoverImage.IsCover = false;
+                }
+
+                // Yeni kapak fotoğrafını ayarla
                 var carimage = carimages.Data.ToList()[coverIndex];
                 carimage.IsCover = true;
                 _carImageWriteRepository.Update(carimage);

@@ -28,7 +28,8 @@ namespace Application.Features.Queries.CarQueries.GetCarsByFilter
                 request.MinPrice,
                 request.MaxPrice,
                 skip,
-                take);
+                take,
+                request.SortOrder);
 
             int totalCars = _carReadRepositories.GetAll().Count();
             int totalPages = (int)Math.Ceiling((double)totalCars / request.ItemsPerPage);

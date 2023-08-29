@@ -29,8 +29,8 @@ namespace Application.Features.Commands.AppUserCommands.DeleteUserImageCommand
             if (File.Exists(fullPath))
                 File.Delete(fullPath);
 
-
-            user.ProfileImagePath = null;
+            //Website/assets/images/dealer-logo.jpg
+            user.ProfileImagePath = "Website/assets/images/dealer-logo.jpg";
 
             var result = await _userManager.UpdateAsync(user);
 

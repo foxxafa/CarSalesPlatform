@@ -14,6 +14,7 @@ namespace Application.Features.Queries.CarQueries.GetCarsByFilter
         public Guid? GearTypeId { get; set; }
         public int MinPrice { get; set; }
         public int MaxPrice { get; set; }
+        public string SortOrder { get; set; }
 
         public int Page { get; set; }
         public int ItemsPerPage { get; set; } = 12;

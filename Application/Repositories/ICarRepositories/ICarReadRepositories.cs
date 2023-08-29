@@ -17,6 +17,7 @@ namespace Application.Repositories.ICarRepositories
                                           int minPrice,
                                           int maxPrice,
                                           int skip,
-                                          int take);
+                                          int take,
+                                          string sortOrder);
     }
 }

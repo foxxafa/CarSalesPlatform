@@ -45,7 +45,8 @@ namespace Persistence.Repositories.CarRepositories
                                                      int minPrice,
                                                      int maxPrice,
                                                      int skip,
-                                                     int take)
+                                                     int take,
+                                                     string sortOrder)
         {
             var query = _context.Cars.AsQueryable();
 
@@ -81,8 +82,22 @@ namespace Persistence.Repositories.CarRepositories
             // Fiyat aralığı için filtreleme
             query = query.Where(car => car.Price >= minPrice && car.Price <= maxPrice);
 
+
+            switch (sortOrder)
+            {
+                case "asc":
+                    query = query.OrderBy(car => car.Price);
+                    break;
+                case "desc":
+                    query = query.OrderByDescending(car => car.Price);
+                    break;
+                // Varsayılan olarak isme göre sırala
+                default:
+                    query = query.OrderBy(car => car.Name);
+                    break;
+            }
+
             return query
-                .OrderBy(car => car.Name)
                 .Skip(skip)
                 .Take(take)
                 .Select(car => new CarsPageCarsDTO

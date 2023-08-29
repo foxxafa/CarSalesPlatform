@@ -9,7 +9,6 @@ using CarSalesPlatformMVC.Areas.Website.Models.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace CarSalesPlatformMVC.Areas.Website.Controllers
 {
@@ -46,8 +45,11 @@ namespace CarSalesPlatformMVC.Areas.Website.Controllers
         [HttpGet("[controller]/[action]")]
         public async Task<Result> GetImage(GetProfileImageQueryRequest request)
         {
-            var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
-            request.UserId = userId.ToString();
+            var userId = HttpContext.Items["UserId"] as Guid?;
+            if (!userId.HasValue)
+                return new ErrorResult("Kullanıcı kimliği çözümlenemedi");
+
+            request.UserId = userId.Value.ToString();
             var result = await _mediator.Send(request);
             return result;
         }
@@ -55,7 +57,11 @@ namespace CarSalesPlatformMVC.Areas.Website.Controllers
         [HttpPost("[controller]/[action]")]
         public async Task<Result> SetProfileImage(UpdateUserImageCommandRequest request)
         {
-            request.UserId= User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = HttpContext.Items["UserId"] as Guid?;
+            if (!userId.HasValue)
+                return new ErrorResult("Kullanıcı kimliği çözümlenemedi");
+
+            request.UserId = userId.Value.ToString();
             var response = await _mediator.Send(request);
             return response;
 
@@ -64,7 +70,11 @@ namespace CarSalesPlatformMVC.Areas.Website.Controllers
         [HttpDelete("[controller]/[action]")]
         public async Task<Result> DeleteProfileImage(DeleteUserImageCommandRequest request)
         {
-            request.UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = HttpContext.Items["UserId"] as Guid?;
+            if (!userId.HasValue)
+                return new ErrorResult("Kullanıcı kimliği çözümlenemedi");
+
+            request.UserId = userId.Value.ToString();
             var response = await _mediator.Send(request);
             return response;
 
@@ -72,11 +82,15 @@ namespace CarSalesPlatformMVC.Areas.Website.Controllers
 
         [HttpPost("[controller]/[action]")]
         [ValidateModel]
-        public async Task<IActionResult> UpdateUserDetails(UpdateUserCommandRequest updateUserCommandRequest)
+        public async Task<IActionResult> UpdateUserDetails(UpdateUserCommandRequest request)
         {
-            updateUserCommandRequest.UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = HttpContext.Items["UserId"] as Guid?;
+            if (!userId.HasValue)
+                return View(new ErrorResult("Kullanıcı kimliği çözümlenemedi"));
 
-            Result response = await _mediator.Send(updateUserCommandRequest);
+            request.UserId = userId.Value.ToString();
+
+            Result response = await _mediator.Send(request);
             return Ok(response);
         }
     }
