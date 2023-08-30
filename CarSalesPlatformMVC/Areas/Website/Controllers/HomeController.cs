@@ -26,5 +26,15 @@ namespace CarSalesPlatformMVC.Areas.Website.Controllers
 
             return View();
         }
+
+        
+        private static List<string> SuggestionsList = new List<string>() { "Beyaz", "BMW", "Bej", "Kırmızı" };
+
+        [HttpGet("[controller]/[action]")]
+        public IEnumerable<string> GetSuggestions(string query)
+        {
+            return SuggestionsList.Where(s => s.StartsWith(query, StringComparison.OrdinalIgnoreCase)).Take(5);
+        }
+
     }
 }

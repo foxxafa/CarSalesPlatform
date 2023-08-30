@@ -158,7 +158,10 @@
                         <div class="header_search">
                             <div id="search_toggle"><i class="fa fa-search" aria-hidden="true"></i></div>
                             <form action="#" method="get" id="header-search-form">
-                                <input type="text" placeholder="Ara..." class="form-control">
+                                @*<input type="text" placeholder="Ara..." class="form-control">*@
+                                <input type="text" id="searchBox" class="form-control" placeholder="Ara..." autocomplete="off">
+                                <div id="suggestionsDropdown" class="dropdown-menu" aria-labelledby="searchBox">
+                                </div>
                                 <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
                             </form>
                         </div>
@@ -412,14 +415,47 @@
         </div>
     </footer>
 
+    @*    <script>
+    document.addEventListener('keydown', function (event) {
+    // Eğer tuş "Enter" ise ve modal pencere açık ise
+    if (event.key === "Enter" && $('#loginform').hasClass('show')) {
+    event.preventDefault();
+    // Modalda ki formu gönder
+    document.getElementById('loginForm').dispatchEvent(new Event('submit', { 'bubbles': true }));
+    }
+    });
+
+    </script>*@
+
     <script>
-        document.addEventListener('keydown', function (event) {
-            // Eğer tuş "Enter" ise ve modal pencere açık ise
-            if (event.key === "Enter" && $('#loginform').hasClass('show')) {
-                event.preventDefault();
-                // Modalda ki formu gönder
-                document.getElementById('loginForm').dispatchEvent(new Event('submit', { 'bubbles': true }));
-            }
+        $(document).ready(function () {
+            $('#searchBox').on('input', function () {
+                var query = $(this).val();
+                if (query.length > 0) {
+                    $.ajax({
+                        url: '/Home/GetSuggestions',
+                        method: 'GET',
+                        data: { 'query': query },
+                        success: function (data) {
+                            $('#suggestionsDropdown').empty();
+                            $('#suggestionsDropdown').show();
+                            data.forEach(function (item) {
+                                $('#suggestionsDropdown').append('<a class="dropdown-item suggestion-item">' + item + '</a>');
+                            });
+                        }
+                    });
+                } else {
+                    $('#suggestionsDropdown').hide();
+                }
+            });
+
+            // Kullanıcı bir öneriye tıkladığında veya 'tab' tuşuna bastığında
+            $(document).on('click', '.suggestion-item', function () {
+                var existingVal = $('#searchBox').val();
+                var newVal = $(this).text();
+                $('#searchBox').val(existingVal + ' ' + newVal);
+                $('#suggestionsDropdown').hide();
+            });
         });
 
     </script>
@@ -438,6 +474,12 @@
                             $('#signupform').modal('hide');
                             $('#loginform').modal('show');
                             $('#signupFormserverError').text('İşlem başarılı').removeClass('text-danger').addClass('text-success');
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Kayıt Başarılı.',
+                                showConfirmButton: false,
+                                timer: 1000
+                            })
                         } else {
                             if (response.message)
                                 $('#signupFormserverError').text(response.message).removeClass('text-success').addClass('text-danger');
@@ -493,6 +535,12 @@
                         if (userName) {
                             $("#userName").text(decodeURIComponent(userName));
                         };
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Giriş Başarılı.',
+                            showConfirmButton: false,
+                            timer: 1000
+                        })
                     } else {
                         $(".login_btn").show();
                         $(".user_login").hide();

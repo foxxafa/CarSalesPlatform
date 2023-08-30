@@ -42,8 +42,6 @@ namespace Application.Features.Queries.CarQueries.GetCarsByFilter
 
             return new SuccessDataResult<(PaginationDTO, IEnumerable<CarsPageCarsDTO>, int)>((pagination, cars, totalCars), "Başarılı");
 
-            //return Task.FromResult(new SuccessDataResult<(PaginationDTO, IEnumerable<MyCarDTO>, int)>((pagination, cars, totalCars), "Başarılı") as DataResult<(PaginationDTO, IEnumerable<MyCarDTO>, int)>);
-
         }
     }
 }
