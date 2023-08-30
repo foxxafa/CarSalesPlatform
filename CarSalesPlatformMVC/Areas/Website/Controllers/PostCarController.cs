@@ -4,9 +4,11 @@ using Application.Results;
 using AutoMapper;
 using CarSalesPlatformMVC.Areas.Website.Attributes;
 using CarSalesPlatformMVC.Areas.Website.Models.ViewModels;
+using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace CarSalesPlatformMVC.Areas.Website.Controllers
 {
@@ -14,23 +16,55 @@ namespace CarSalesPlatformMVC.Areas.Website.Controllers
     [Authorize]
     public class PostCarController : Controller
     {
+        private IMemoryCache _cache;
         readonly IMediator _mediator;
         readonly ICarService _carService;
         readonly IMapper _mapper;
-        public PostCarController(IMediator mediator, ICarService carService, IMapper mapper)
+        public PostCarController(IMediator mediator, ICarService carService, IMapper mapper, IMemoryCache cache)
         {
             _mediator = mediator;
             _carService = carService;
             _mapper = mapper;
+            _cache = cache;
         }
 
         public async Task<IActionResult> Index()
         {
-            ViewBag.Brands = (await _carService.GetCarBrandsAsync()).Data.ToList();
-            ViewBag.Colors = (await _carService.GetCarColorsAsync()).Data.ToList();
-            ViewBag.FuelTypes = (await _carService.GetCarFuelTypesAsync()).Data.ToList();
-            ViewBag.Categories = (await _carService.GetCarCategoriesAsync()).Data.ToList();
-            ViewBag.GearTypes = (await _carService.GetCarGearTypesAsync()).Data.ToList();
+
+            if (!_cache.TryGetValue("Brands", out List<Brand> cachedBrands))
+            {
+                cachedBrands = (await _carService.GetCarBrandsAsync()).Data.ToList();
+                _cache.Set("Brands", cachedBrands);
+            }
+            ViewBag.Brands = cachedBrands;
+
+            if (!_cache.TryGetValue("Colors", out List<Color> cachedColors))
+            {
+                cachedColors = (await _carService.GetCarColorsAsync()).Data.ToList();
+                _cache.Set("Colors", cachedColors);
+            }
+            ViewBag.Colors = cachedColors;
+
+            if (!_cache.TryGetValue("FuelTypes", out List<FuelType> cachedFuelTypes))
+            {
+                cachedFuelTypes = (await _carService.GetCarFuelTypesAsync()).Data.ToList();
+                _cache.Set("FuelTypes", cachedFuelTypes);
+            }
+            ViewBag.FuelTypes = cachedFuelTypes;
+
+            if (!_cache.TryGetValue("Categories", out List<Category> cachedCategories))
+            {
+                cachedCategories = (await _carService.GetCarCategoriesAsync()).Data.ToList();
+                _cache.Set("Categories", cachedCategories);
+            }
+            ViewBag.Categories = cachedCategories;
+
+            if (!_cache.TryGetValue("GearTypes", out List<GearType> cachedGearTypes))
+            {
+                cachedGearTypes = (await _carService.GetCarGearTypesAsync()).Data.ToList();
+                _cache.Set("GearTypes", cachedGearTypes);
+            }
+            ViewBag.GearTypes = cachedGearTypes;
 
             return View();
         }

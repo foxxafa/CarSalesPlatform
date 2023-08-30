@@ -13,6 +13,7 @@ using System.Security.Claims;
 using System.Text;
 using Newtonsoft.Json;
 using FluentValidation;
+using CarSalesPlatformMVC.Areas.Website.Chache;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,8 @@ builder.Services.AddControllersWithViews(options =>
 {
     options.Filters.Add(typeof(UserAuthenticationStateFilter));
 });
+
+builder.Services.AddHostedService<CacheInitializer>();
 
 builder.Services.AddApplicationServices();
 builder.Services.AddPersistenceServices();

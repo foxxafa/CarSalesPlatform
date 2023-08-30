@@ -1,39 +1,44 @@
 ﻿using Application.Abstractions.Services;
+using CarSalesPlatformMVC.Areas.Website.Chache;
+using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace CarSalesPlatformMVC.Areas.Website.Controllers
 {
     [Area("Website")]
     public class HomeController : Controller
     {
+        private IMemoryCache _cache;
         readonly IMediator _mediator;
         readonly ICarService _carService;
 
-        public HomeController(IMediator mediator, ICarService carService)
+        public HomeController(IMediator mediator, ICarService carService, IMemoryCache cache)
         {
             _mediator = mediator;
             _carService = carService;
+            _cache = cache;
         }
 
         public async Task<IActionResult> Index()
         {
-            ViewBag.Brands = (await _carService.GetCarBrandsAsync()).Data.ToList();
-            ViewBag.Colors = (await _carService.GetCarColorsAsync()).Data.ToList();
-            ViewBag.FuelTypes = (await _carService.GetCarFuelTypesAsync()).Data.ToList();
-            ViewBag.Categories = (await _carService.GetCarCategoriesAsync()).Data.ToList();
-            ViewBag.GearTypes = (await _carService.GetCarGearTypesAsync()).Data.ToList();
+            ViewBag.Brands = _cache.Get<List<Brand>>("Brands");
+            ViewBag.Colors = _cache.Get<List<Color>>("Colors");
+            ViewBag.FuelTypes = _cache.Get<List<FuelType>>("FuelTypes");
+            ViewBag.Categories = _cache.Get<List<Category>>("Categories");
+            ViewBag.GearTypes = _cache.Get<List<GearType>>("GearTypes");
 
             return View();
         }
 
-        
-        private static List<string> SuggestionsList = new List<string>() { "Beyaz", "BMW", "Bej", "Kırmızı" };
-
         [HttpGet("[controller]/[action]")]
         public IEnumerable<string> GetSuggestions(string query)
         {
-            return SuggestionsList.Where(s => s.StartsWith(query, StringComparison.OrdinalIgnoreCase)).Take(5);
+            // CacheInitializer sınıfındaki static SuggestionsList'i kullan
+            return CacheInitializer.SuggestionsList
+                   .Where(s => s.StartsWith(query, StringComparison.OrdinalIgnoreCase))
+                   .Take(5);
         }
 
     }
