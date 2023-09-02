@@ -68,6 +68,10 @@
             <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+
+    <link rel="stylesheet" type="text/css" href="~/Website/assets/css/Loading/Load.css">
+
+
     <style>
         .header_wrap {
             display: flex;
@@ -422,6 +426,7 @@
 
                 // Kullanıcı arama yaptığında arama dizesini localStorage'a kaydedin
                 localStorage.setItem("searchQuery", $("#searchBox").val());
+                //localStorage.setItem("filterType","search");
 
                 // Diğer sayfaya yönlendir
                 window.location.href = '/Cars';

@@ -222,46 +222,79 @@
             var car = carList[i];
             var carImage = "/images/" + carImageList[i];
             var carHtml = `
-                            <div class="col-md-4 grid_listing">
-                                <div class="product-listing-m gray-bg">
-                                    <div class="product-listing-img">
-                                        <a href="/CarDetails/${car.carId}"><img src="${carImage}" class="img-fluid" alt=""> </a>
-                                        <div class="compare_item">
-                                            <div class="checkbox">
-                                                <input type="checkbox" id="compare${i}">
-                                                <label for="compare${i}">Compare</label>
+                                <div class="col-md-4 grid_listing">
+                                    <div class="product-listing-m gray-bg">
+                                        <div class="product-listing-img">
+                                            <a href="/CarDetails/${car.carId}"><img src="${carImage}" class="img-fluid" alt=""> </a>
+                                            <div class="compare_item">
+                                                <div class="checkbox">
+                                                    <input type="checkbox" id="compare${i}">
+                                                    <label for="compare${i}">Compare</label>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="product-listing-content">
-                                        <h5><a href="/CarDetails/${car.carId}">${car.name}</a></h5>
-                                        <p class="list-price">${car.price} TL</p>
-                                        <div class="car-location"><span><i class="fa fa-map-marker" aria-hidden="true"></i> ${car.location}</span></div>
-                                        <ul class="features_list">
-                                            <li><i class="fa fa-road" aria-hidden="true"></i>${car.mileage} km</li>
-                                            <li><i class="fa fa-calendar" aria-hidden="true"></i>${car.year} Model</li>
-                                            <li><i class="fa fa-car" aria-hidden="true"></i>${car.fuelType}</li>
-                                                <li><i class="fa fa-gear" aria-hidden="true"></i>${car.gearType}</li>
-                                        </ul>
+                                        <div class="product-listing-content">
+                                            <h5><a href="/CarDetails/${car.carId}">${car.name}</a></h5>
+                                            <p class="list-price">${car.price} TL</p>
+                                            <div class="car-location"><span><i class="fa fa-map-marker" aria-hidden="true"></i> ${car.location}</span></div>
+                                            <ul class="features_list">
+                                                <li><i class="fa fa-road" aria-hidden="true"></i>${car.mileage} km</li>
+                                                <li><i class="fa fa-calendar" aria-hidden="true"></i>${car.year} Model</li>
+                                                <li><i class="fa fa-car" aria-hidden="true"></i>${car.fuelType}</li>
+                                                    <li><i class="fa fa-gear" aria-hidden="true"></i>${car.gearType}</li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        `;
+                            `;
             row.append(carHtml);
         }
     }
 
     function fetchData(url, params) {
+        let minimumTimeReached = false;
+
+        Swal.fire({
+            title: 'Yükleniyor...',
+            html: '<div class="specific-loader"><div class="loader"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>',
+            showConfirmButton: false,
+            showLoaderOnConfirm: false,
+            allowOutsideClick: () => !Swal.isLoading(),
+            didOpen: () => {
+                setTimeout(() => {
+                    minimumTimeReached = true;
+                }, 1000);  // En az 0.5 saniye (500 ms) görünecek
+            }
+        });
+
         $.ajax({
             url: url,
             type: 'GET',
             data: params,
             success: function (response) {
+                if (minimumTimeReached) {
+                    Swal.close();
+                } else {
+                    setTimeout(() => {
+                        Swal.close();
+                    }, 1000);
+                }
+
                 populateCarList(response.car, response.carsImage);
                 updatePagination(response.pagination.currentPage, response.pagination.totalPages);
+            },
+            error: function () {
+                Swal.update({
+                    title: 'Hata!',
+                    text: 'Bir şeyler yanlış gitti.',
+                    icon: 'error',
+                    showConfirmButton: true
+                });
             }
         });
     }
+
+
 </script>
 
 <script>
@@ -296,6 +329,10 @@
     }
 
 
+    var query = localStorage.getItem('searchQuery');
+    console.log(query);
+    localStorage.removeItem('searchQuery');
+
     function updatePagination(currentPage, totalPages) {
         var paginationHtml = "";
         for (var i = 1; i <= totalPages; i++) {
@@ -311,64 +348,63 @@
         $(".pagination-link").click(function () {
             var page = $(this).data("page");
 
-            // URL query parametresini güncelle
             var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?page=' + page;
             window.history.pushState({ path: newurl }, '', newurl);
-
-            var params = {
-                ColorId: null,
-                BrandId: null,
-                CategoryId: null,
-                FuelTypeId: null,
-                GearTypeId: null,
-                MinPrice: 1,
-                MaxPrice: 999999999,
-                Page: page,
-                SortOrder: "asc"
-            };
-
-            fetchData('/Cars/GetFiltredCars', params);
-        });
-    }
-
-    $(document).ready(function () {
-        var row = $('#carListRow');
-        var query = localStorage.getItem('searchQuery');
-        if (query) {
-            fetchData('/Cars/GetCarsBySearchFilter', { Query: query, Page: 1 });
-            localStorage.removeItem('searchQuery');
-        }
-        else {
-            if (localStorage.getItem('minPrice')) {
-                var color = localStorage.getItem('color');
-                var brand = localStorage.getItem('brand');
-                var category = localStorage.getItem('category');
-                var fueltype = localStorage.getItem('fuelType');
-                var gearType = localStorage.getItem('category');
-
-                var minPrice = localStorage.getItem('minPrice');
-                var maxPrice = localStorage.getItem('maxPrice');
-
-                localStorage.removeItem('minPrice');
+            
+            if (query) {
+                // Arama sorgusu için
+                fetchData('/Cars/GetCarsBySearchFilter', { Query: query, Page: page });
+            } else {
+                // Filtre değerleri için
 
                 var params = {
-                    ColorId: color,
-                    BrandId: brand,
-                    CategoryId: category,
-                    FuelTypeId: fueltype,
-                    GearTypeId: gearType,
-                    MinPrice: minPrice,
-                    MaxPrice: maxPrice,
-                    Page: 1,
+                    ColorId: null,
+                    BrandId: null,
+                    CategoryId: null,
+                    FuelTypeId: null,
+                    GearTypeId: null,
+                    MinPrice: 1,
+                    MaxPrice: 999999999,
+                    Page: page,
                     SortOrder: "asc"
                 };
 
                 fetchData('/Cars/GetFiltredCars', params);
             }
+        });
+    }
+
+
+    $(document).ready(function () {
+
+        var urlParams = new URLSearchParams(window.location.search);
+        var page = urlParams.get('page') || 1;
+
+        var row = $('#carListRow');
+
+        if (query) {
+            fetchData('/Cars/GetCarsBySearchFilter', { Query: query, Page: page });
+        }
+        else {
+            if (localStorage.getItem('minPrice')) {
+                var filterValues = getFilterValues();
+
+                var params = {
+                    ColorId: filterValues.color,
+                    BrandId: filterValues.brand,
+                    CategoryId: filterValues.category,
+                    FuelTypeId: filterValues.fuelType,
+                    GearTypeId: filterValues.gearType,
+                    MinPrice: filterValues.minPrice,
+                    MaxPrice: filterValues.maxPrice,
+                    Page: 1,
+                    SortOrder: filterValues.sortingMethod
+                };
+
+                localStorage.removeItem('minPrice');
+                fetchData('/Cars/GetFiltredCars', params);
+            }
             else {
-                var urlParams = new URLSearchParams(window.location.search);
-                var page = urlParams.get('page') || 1;
-                
                 var params = {
                     ColorId: null,
                     BrandId: null,
