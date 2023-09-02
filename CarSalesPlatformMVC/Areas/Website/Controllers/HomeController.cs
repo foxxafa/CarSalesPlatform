@@ -35,11 +35,12 @@ namespace CarSalesPlatformMVC.Areas.Website.Controllers
         [HttpGet("[controller]/[action]")]
         public IEnumerable<string> GetSuggestions(string query)
         {
-            // CacheInitializer sınıfındaki static SuggestionsList'i kullan
-            return CacheInitializer.SuggestionsList
-                   .Where(s => s.StartsWith(query, StringComparison.OrdinalIgnoreCase))
-                   .Take(5);
-        }
+            var keywords = query.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            if (keywords.Length == 0) return Enumerable.Empty<string>();
 
+            return CacheInitializer.SuggestionsList
+                       .Where(s => s.StartsWith(keywords.Last(), StringComparison.OrdinalIgnoreCase))
+                       .Take(5);
+        }
     }
 }

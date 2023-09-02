@@ -157,7 +157,7 @@
                         </div>
                         <div class="header_search">
                             <div id="search_toggle"><i class="fa fa-search" aria-hidden="true"></i></div>
-                            <form action="#" method="get" id="header-search-form">
+                            <form id="header-search-form">
                                 @*<input type="text" placeholder="Ara..." class="form-control">*@
                                 <input type="text" id="searchBox" class="form-control" placeholder="Ara..." autocomplete="off">
                                 <div id="suggestionsDropdown" class="dropdown-menu" aria-labelledby="searchBox">
@@ -415,17 +415,19 @@
         </div>
     </footer>
 
-    @*    <script>
-    document.addEventListener('keydown', function (event) {
-    // Eğer tuş "Enter" ise ve modal pencere açık ise
-    if (event.key === "Enter" && $('#loginform').hasClass('show')) {
-    event.preventDefault();
-    // Modalda ki formu gönder
-    document.getElementById('loginForm').dispatchEvent(new Event('submit', { 'bubbles': true }));
-    }
-    });
+    <script>
+        $(document).ready(function () {
+            $('#header-search-form').on('submit', function (e) {
+                e.preventDefault();
 
-    </script>*@
+                // Kullanıcı arama yaptığında arama dizesini localStorage'a kaydedin
+                localStorage.setItem("searchQuery", $("#searchBox").val());
+
+                // Diğer sayfaya yönlendir
+                window.location.href = '/Cars';
+            });
+        });
+    </script>
 
     <script>
         $(document).ready(function () {
@@ -449,15 +451,27 @@
                 }
             });
 
-            // Kullanıcı bir öneriye tıkladığında veya 'tab' tuşuna bastığında
             $(document).on('click', '.suggestion-item', function () {
                 var existingVal = $('#searchBox').val();
                 var newVal = $(this).text();
-                $('#searchBox').val(existingVal + ' ' + newVal);
+                var lastKeyword = existingVal.split(' ').pop();
+                $('#searchBox').val(existingVal.replace(new RegExp(lastKeyword + '$'), newVal));
                 $('#suggestionsDropdown').hide();
             });
-        });
 
+            $('#searchBox').on('keydown', function (e) {
+                if (e.keyCode === 9) { // Tab key
+                    e.preventDefault();
+                    var firstSuggestion = $('#suggestionsDropdown').find('.suggestion-item').first().text();
+                    if (firstSuggestion) {
+                        var existingVal = $('#searchBox').val();
+                        var lastKeyword = existingVal.split(' ').pop();
+                        $('#searchBox').val(existingVal.replace(new RegExp(lastKeyword + '$'), firstSuggestion));
+                        $('#suggestionsDropdown').hide();
+                    }
+                }
+            });
+        });
     </script>
 
     <script>
