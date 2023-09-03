@@ -302,21 +302,28 @@
     $("#sortingForm").change(function () {
         var sortingMethod = $("#sorting").val();  // "asc" veya "desc" olacak
 
-        var filterValues = getFilterValues();
+        if(query)
+        {
+            fetchData('/Cars/GetCarsBySearchFilter', { Query: query, Page: 1 });
+        }
+        else
+        {
+            var filterValues = getFilterValues();
 
-        var params = {
-            ColorId: filterValues.color,
-            BrandId: filterValues.brand,
-            CategoryId: filterValues.category,
-            FuelTypeId: filterValues.fuelType,
-            GearTypeId: filterValues.gearType,
-            MinPrice: filterValues.minPrice,
-            MaxPrice: filterValues.maxPrice,
-            Page: 1,
-            SortOrder: filterValues.sortingMethod
-        };
+            var params = {
+                ColorId: filterValues.color,
+                BrandId: filterValues.brand,
+                CategoryId: filterValues.category,
+                FuelTypeId: filterValues.fuelType,
+                GearTypeId: filterValues.gearType,
+                MinPrice: filterValues.minPrice,
+                MaxPrice: filterValues.maxPrice,
+                Page: 1,
+                SortOrder: filterValues.sortingMethod
+            };
 
-        fetchData('/Cars/GetFiltredCars', params);
+            fetchData('/Cars/GetFiltredCars', params);
+        }
     });
 
 </script>
@@ -328,9 +335,7 @@
         return parseInt(str.replace(/\./g, ''));
     }
 
-
     var query = localStorage.getItem('searchQuery');
-    console.log(query);
     localStorage.removeItem('searchQuery');
 
     function updatePagination(currentPage, totalPages) {
@@ -387,18 +392,26 @@
         }
         else {
             if (localStorage.getItem('minPrice')) {
-                var filterValues = getFilterValues();
+                
+                var brand = localStorage.getItem("brand");
+                var category = localStorage.getItem("category");
+                var fuelType = localStorage.getItem("fuelType");
+                var gearType = localStorage.getItem("gearType");
+                var color = localStorage.getItem("color");
+
+                var minPrice = localStorage.getItem('minPrice');
+                var maxPrice = localStorage.getItem('maxPrice');
 
                 var params = {
-                    ColorId: filterValues.color,
-                    BrandId: filterValues.brand,
-                    CategoryId: filterValues.category,
-                    FuelTypeId: filterValues.fuelType,
-                    GearTypeId: filterValues.gearType,
-                    MinPrice: filterValues.minPrice,
-                    MaxPrice: filterValues.maxPrice,
+                    ColorId: color,
+                    BrandId: brand,
+                    CategoryId: category,
+                    FuelTypeId: fuelType,
+                    GearTypeId: gearType,
+                    MinPrice: minPrice,
+                    MaxPrice: maxPrice,
                     Page: 1,
-                    SortOrder: filterValues.sortingMethod
+                    SortOrder: "asc"
                 };
 
                 localStorage.removeItem('minPrice');

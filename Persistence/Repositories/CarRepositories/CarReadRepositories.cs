@@ -41,7 +41,7 @@ namespace Persistence.Repositories.CarRepositories
         }
 
 
-        public IEnumerable<CarsPageCarsDTO> GetCarsBySearchFilter(string searchQuery,int skip,int take)
+        public IEnumerable<CarsPageCarsDTO> GetCarsBySearchFilter(string searchQuery,int skip,int take, string sortOrder)
         {
             var query = _context.Cars.AsQueryable();
 
@@ -71,6 +71,20 @@ namespace Persistence.Repositories.CarRepositories
 
                     predicate = predicate.Or(combinedPredicate);
                 }
+            }
+
+            switch (sortOrder)
+            {
+                case "asc":
+                    query = query.OrderBy(car => car.Price);
+                    break;
+                case "desc":
+                    query = query.OrderByDescending(car => car.Price);
+                    break;
+                // Varsayılan olarak isme göre sırala
+                default:
+                    query = query.OrderBy(car => car.Name);
+                    break;
             }
 
             query = query.AsExpandable().Where(predicate).Skip(skip).Take(take);

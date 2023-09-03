@@ -6,7 +6,7 @@ namespace Application.Repositories.ICarRepositories
 {
     public interface ICarReadRepositories : IReadRepository<Car>
     {
-        IEnumerable<CarsPageCarsDTO> GetCarsBySearchFilter(string searchFilter,int skip,int take);
+        IEnumerable<CarsPageCarsDTO> GetCarsBySearchFilter(string searchFilter,int skip,int take, string sortOrder);
         IEnumerable<MyCarDTO> GetCarsByUserId(Guid userId, int skip, int take);
 
         IEnumerable<CarsPageCarsDTO> GetCarsByFilter(

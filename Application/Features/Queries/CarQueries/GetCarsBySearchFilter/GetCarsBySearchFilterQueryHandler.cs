@@ -19,7 +19,7 @@ namespace Application.Features.Queries.CarQueries.GetCarsBySearchFilter
             int skip = (request.Page - 1) * request.ItemsPerPage;
             int take = request.ItemsPerPage;
 
-            var cars = _carReadRepositories.GetCarsBySearchFilter(request.Query,skip,take);
+            var cars = _carReadRepositories.GetCarsBySearchFilter(request.Query,skip,take,request.sortOrder);
 
             int totalCars = _carReadRepositories.GetAll().Count();
             int totalPages = (int)Math.Ceiling((double)totalCars / request.ItemsPerPage);
