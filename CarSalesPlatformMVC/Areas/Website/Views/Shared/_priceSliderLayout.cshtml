@@ -4,7 +4,7 @@
     }
 
     .tooltip-inner {
-        width: 150px; /* Genişliği otomatik olarak ayarla */
+        width: 200px; /* Genişliği otomatik olarak ayarla */
     }
 
 </style>
@@ -35,7 +35,7 @@
             value: [0, 100],
             tooltip: 'always',
             formatter: function (value) {
-                return formatNumberWithDots(expSlider(value[0]).toFixed(0)) + " : " + formatNumberWithDots(expSlider(value[1]).toFixed(0));
+                return formatNumberWithDots(expSlider(value[0]).toFixed(0)) + " TL : " + formatNumberWithDots(expSlider(value[1]).toFixed(0))+" TL";
             }
         }).on('slide', function (slideEvt) {
             var realValues = [

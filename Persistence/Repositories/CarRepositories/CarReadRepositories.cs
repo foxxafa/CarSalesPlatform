@@ -47,7 +47,7 @@ namespace Persistence.Repositories.CarRepositories
 
             var brands = _cache.Get<List<Brand>>("Brands").Select(b => b.Name.ToLower()).ToList();
             var fuelTypes = _cache.Get<List<FuelType>>("FuelTypes").Select(f => f.Type.ToLower()).ToList();
-            var colors = _cache.Get<List<Color>>("Colors").Select(c => c.Name.ToLower()).ToList();
+            var colors = _cache.Get<List<Domain.Entities.Color>>("Colors").Select(c => c.Name.ToLower()).ToList();
             var categories = _cache.Get<List<Category>>("Categories").Select(c => c.Name.ToLower()).ToList();
             var gearTypes = _cache.Get<List<GearType>>("GearTypes").Select(g => g.Type.ToLower()).ToList();
 
@@ -57,21 +57,65 @@ namespace Persistence.Repositories.CarRepositories
             var fuelKeywords = inputKeywords.Where(k => fuelTypes.Contains(k.ToLower())).ToList();
             var colorKeywords = inputKeywords.Where(k => colors.Contains(k.ToLower())).ToList();
             var categoryKeywords = inputKeywords.Where(k => categories.Contains(k.ToLower())).ToList();
-            var gearTypeKeywords = inputKeywords.Where(k => gearTypes.Contains(k.ToLower())).ToList();
+            var gearKeywords = inputKeywords.Where(k => gearTypes.Contains(k.ToLower())).ToList();
 
-            var predicate = PredicateBuilder.New<Car>(false);
+            var predicate = PredicateBuilder.New<Car>(true);
 
-            foreach (var brand in brandKeywords)
+            // Brand
+            if (brandKeywords.Any())
             {
+                var brandPredicate = PredicateBuilder.New<Car>(false);
+                foreach (var brand in brandKeywords)
+                {
+                    brandPredicate = brandPredicate.Or(car => car.Brand.Name.ToLower() == brand);
+                }
+                predicate = predicate.And(brandPredicate);
+            }
+
+            // Color
+            if (colorKeywords.Any())
+            {
+                var colorPredicate = PredicateBuilder.New<Car>(false);
                 foreach (var color in colorKeywords)
                 {
-                    var combinedPredicate = PredicateBuilder.New<Car>(true);
-                    combinedPredicate = combinedPredicate.And(car => car.Brand.Name.ToLower() == brand);
-                    combinedPredicate = combinedPredicate.And(car => car.Color.Name.ToLower() == color);
-
-                    predicate = predicate.Or(combinedPredicate);
+                    colorPredicate = colorPredicate.Or(car => car.Color.Name.ToLower() == color);
                 }
+                predicate = predicate.And(colorPredicate);
             }
+
+            // FuelType
+            if (fuelKeywords.Any())
+            {
+                var fuelTypePredicate = PredicateBuilder.New<Car>(false);
+                foreach (var fuel in fuelKeywords)
+                {
+                    fuelTypePredicate = fuelTypePredicate.Or(car => car.FuelType.Type.ToLower() == fuel);
+                }
+                predicate = predicate.And(fuelTypePredicate);
+            }
+
+            // Category
+            if (categoryKeywords.Any())
+            {
+                var categoryPredicate = PredicateBuilder.New<Car>(false);
+                foreach (var category in categoryKeywords)
+                {
+                    categoryPredicate = categoryPredicate.Or(car => car.Category.Name.ToLower() == category);
+                }
+                predicate = predicate.And(categoryPredicate);
+            }
+
+            // GearType
+            if (gearKeywords.Any())
+            {
+                var categoryPredicate = PredicateBuilder.New<Car>(false);
+                foreach (var gear in gearKeywords)
+                {
+                    categoryPredicate = categoryPredicate.Or(car => car.GearType.Type.ToLower() == gear);
+                }
+                predicate = predicate.And(categoryPredicate);
+            }
+
 
             switch (sortOrder)
             {

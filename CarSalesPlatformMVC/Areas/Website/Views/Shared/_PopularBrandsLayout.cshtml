@@ -1,4 +1,7 @@
-﻿<style>
+﻿<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+
+
+<style>
     .brand-hadding {
         display: flex;
         align-items: center;
@@ -6,7 +9,7 @@
     }
 
     .img-fluid {
-        width: 200px; /* İstediğiniz genişlik */
+        width: 100px; /* İstediğiniz genişlik */
         height: 100px; /* İstediğiniz yükseklik */
         object-fit: contain;
     }
@@ -18,23 +21,58 @@
         /*align-items: center;*/
     }
 
+    .swiper {
+        width: 100%;
+        height: 100%;
+    }
+
+    .swiper-slide {
+        text-align: center;
+        font-size: 18px;
+        background: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .swiper-slide img {
+            display: block;
+            width: 50%;
+            height: 100%;
+            object-fit: cover;
+        }
+
 </style>
 
-<!--Brands-->
-<section class="brand-section gray-bg">
-    <div class="container centered-container">
-        <div class="brand-hadding">
-            <h5>Popüler Markalar</h5>
-        </div>
-        <div class="brand-logo-list">
-            <div id="popular_brands">
-                <div><a href="#"><img src="~/images/Brands/bmw.png" class="img-fluid" alt="image"></a></div>
-                <div><a href="#"><img src="~/images/Brands/mercedes.png" class="img-fluid" alt="image"></a></div>
-                <div><a href="#"><img src="~/images/Brands/volkswagen.png" class="img-fluid" alt="image"></a></div>
-                <div><a href="#"><img src="~/images/Brands/audi.png" class="img-fluid" alt="image"></a></div>
-                <div><a href="#"><img src="~/images/Brands/renault.png" class="img-fluid" alt="image"></a></div>
-            </div>
-        </div>
+
+<!-- Swiper -->
+<div class="swiper mySwiper">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide"><img src="~/images/Brands/bmw.png" alt="BMW"></div>
+        <div class="swiper-slide"><img src="~/images/Brands/mercedes.png" alt="Mercedes"></div>
+        <div class="swiper-slide"><img src="~/images/Brands/volkswagen.png" alt="Volkswagen"></div>
+        <div class="swiper-slide"><img src="~/images/Brands/audi.png" alt="Audi"></div>
+        <div class="swiper-slide"><img src="~/images/Brands/renault.png" alt="Renault"></div>
     </div>
-</section>
-<!-- /Brands-->
+    <div class="swiper-pagination"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
+<script>
+    const swiper = new Swiper('.mySwiper', {
+        slidesPerView: 4, // Aynı anda kaç resim gösterileceği
+        spaceBetween: 30,
+        centeredSlides: false, // Eğer merkezdeki slaytı odaklamak istiyorsanız "true" yapın
+        loop: false, // Sonsuz döngüyü iptal ettik
+        autoplay: {
+            delay: 4000, // Otomatik geçiş süresi (ms)
+            disableOnInteraction: false, // Kullanıcı etkileşimi sonrası autoplay devam etsin
+        },
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+    });
+</script>
+
