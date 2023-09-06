@@ -13,6 +13,8 @@
 <label class="form-label">Fiyat Aralığı (TL) </label>
 <input id="price_range" type="text" class="span2" value="" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="[0,100]" />
 
+<script src="~/Website/assets/js/formatNumberWithDots.js"></script>
+
 <script>
     function expSlider(value) {
         var a = 19810.94;
@@ -22,12 +24,6 @@
         return a * Math.exp(b * value) + c;
     }
 
-    function formatNumberWithDots(num) {
-        var parts = num.toString().split(".");
-        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        return parts.join(".");
-    }
-
     $(document).ready(function () {
         $('#price_range').slider({
             min: 0,
@@ -35,7 +31,7 @@
             value: [0, 100],
             tooltip: 'always',
             formatter: function (value) {
-                return formatNumberWithDots(expSlider(value[0]).toFixed(0)) + " TL : " + formatNumberWithDots(expSlider(value[1]).toFixed(0))+" TL";
+                return formatNumberWithDots(expSlider(value[0]).toFixed(0)) + " ₺ : " + formatNumberWithDots(expSlider(value[1]).toFixed(0)) + " ₺";
             }
         }).on('slide', function (slideEvt) {
             var realValues = [

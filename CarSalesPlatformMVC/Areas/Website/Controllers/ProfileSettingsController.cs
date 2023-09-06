@@ -68,7 +68,7 @@ namespace CarSalesPlatformMVC.Areas.Website.Controllers
         }
 
         [HttpDelete("[controller]/[action]")]
-        public async Task<Result> DeleteProfileImage(DeleteUserImageCommandRequest request)
+        public async Task<Result> DeleteProfileImage(RemoveUserImageCommandRequest request)
         {
             var userId = HttpContext.Items["UserId"] as Guid?;
             if (!userId.HasValue)

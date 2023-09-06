@@ -137,6 +137,7 @@
 </section>
 <!--/Listing-grid-view-->
 
+<script src="~/Website/assets/js/formatNumberWithDots.js"></script>
 
 <script>
     function getFilterValues() {
@@ -175,6 +176,7 @@
         $('.sorting-count p span').text(`Arama sonuçlarınız için toplam ${totalCars} sonuç.`);
         for (var i = 0; i < carList.length; i++) {
             var car = carList[i];
+            car.price = formatNumberWithDots(car.price);
             var carImage = "/images/" + carImageList[i];
             var carHtml = `
                                 <div class="col-md-4 grid_listing">

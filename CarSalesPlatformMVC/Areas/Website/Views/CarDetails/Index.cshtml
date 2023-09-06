@@ -1,4 +1,5 @@
-﻿@model CarSalesPlatformMVC.Areas.Website.Models.ViewModels.CarDetailsViewModel;
+﻿@using System.Globalization;
+@model CarSalesPlatformMVC.Areas.Website.Models.ViewModels.CarDetailsViewModel;
 
 @{
     ViewData["Title"] = "Index";
@@ -60,7 +61,7 @@
             </div>
             <div class="col-md-3">
                 <div class="price_info">
-                    <p>@Model.Price TL</p>
+                    <p>@String.Format("{0:N0} ₺", Model.Price)</p>
                 </div>
             </div>
         </div>
