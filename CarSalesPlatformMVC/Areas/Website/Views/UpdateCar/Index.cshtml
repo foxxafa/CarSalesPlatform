@@ -366,6 +366,14 @@
                 form.classList.add('was-validated');
             }, false);
         });
+
+        if (coverIndex != null && coverIndex >= 0) {
+            // Sayfada ilgili resmin kapak fotoğrafı iconunu tıklıyor gibi simüle edelim
+            var allCoverIcons = document.querySelectorAll('.cover-icon');
+            if (allCoverIcons[coverIndex]) {
+                allCoverIcons[coverIndex].click();
+            }
+        }
     });
 
 </script>
@@ -412,7 +420,7 @@
     });
 
     var uploadedImageCount = 0;  // Yüklenen resim sayısını takip etmek için
-    var coverIndex = null;
+    var coverIndex = @Model.CoverIndex;
     var currentCover;
     var imageIndices = [];
 

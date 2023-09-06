@@ -59,8 +59,9 @@ namespace CarSalesPlatformMVC.Areas.Website.Controllers
                 var viewModel = new CarCreateUpdateFormVM
                 {
                     Car = CarDto,
-                    CarImages = imagesResponse.Data
-                };
+                    CarImages = imagesResponse.Data,
+                    CoverIndex = imagesResponse.Data.ToList().FindIndex(x => x.IsCover == true),
+            };
                 return View(viewModel);
             }
 
