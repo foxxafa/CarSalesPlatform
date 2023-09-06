@@ -1,4 +1,4 @@
-﻿namespace Application.DTOs.User.UpdateUserDTO
+﻿namespace Application.DTOs.User.UserDTO
 {
     public class UserDTO
     {

@@ -1,6 +1,6 @@
 ﻿using Application.Abstractions.Services;
 using Application.DTOs.User.CreateUserDTO;
-using Application.DTOs.User.UpdateUserDTO;
+using Application.DTOs.User.UserDTO;
 using Application.Results;
 using Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Application.Features.Commands.AppUserCommands.DeleteUserImageCommand
 {
-    public class RemoveUserImageCommandHandler : IRequestHandler<DeleteUserImageCommandRequest, Result>
+    public class RemoveUserImageCommandHandler : IRequestHandler<RemoveUserImageCommandRequest, Result>
     {
         readonly UserManager<AppUser> _userManager;
         readonly IWebHostEnvironment _hostEnvironment;
@@ -17,7 +17,7 @@ namespace Application.Features.Commands.AppUserCommands.DeleteUserImageCommand
             _hostEnvironment = hostEnvironment;
         }
 
-        public async Task<Result> Handle(DeleteUserImageCommandRequest request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(RemoveUserImageCommandRequest request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByIdAsync(request.UserId);
 

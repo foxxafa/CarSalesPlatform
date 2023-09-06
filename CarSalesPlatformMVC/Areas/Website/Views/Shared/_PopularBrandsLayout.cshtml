@@ -1,49 +1,18 @@
 ﻿<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
 
-
 <style>
-    .brand-hadding {
+    .mySwiper .swiper-slide {
         display: flex;
-        align-items: center;
-        justify-content: center; /* Eğer yatayda da ortalama isterseniz */
-    }
-
-    .img-fluid {
-        width: 100px; /* İstediğiniz genişlik */
-        height: 100px; /* İstediğiniz yükseklik */
-        object-fit: contain;
-    }
-
-    .centered-container {
-        display: flex;
-        flex-direction: row;
         justify-content: center;
-        /*align-items: center;*/
-    }
-
-    .swiper {
-        width: 100%;
-        height: 100%;
-    }
-
-    .swiper-slide {
-        text-align: center;
-        font-size: 18px;
+        align-items: center;
         background: #fff;
-        display: flex;
-        justify-content: center;
-        align-items: center;
     }
 
-        .swiper-slide img {
-            display: block;
+        .mySwiper .swiper-slide img {
             width: 50%;
-            height: 100%;
             object-fit: cover;
         }
-
 </style>
-
 
 <!-- Swiper -->
 <div class="swiper mySwiper">
@@ -58,16 +27,13 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-
 <script>
     const swiper = new Swiper('.mySwiper', {
-        slidesPerView: 4, // Aynı anda kaç resim gösterileceği
-        spaceBetween: 30,
-        centeredSlides: false, // Eğer merkezdeki slaytı odaklamak istiyorsanız "true" yapın
-        loop: false, // Sonsuz döngüyü iptal ettik
+        slidesPerView: 4,
+        loop: false,
         autoplay: {
-            delay: 4000, // Otomatik geçiş süresi (ms)
-            disableOnInteraction: false, // Kullanıcı etkileşimi sonrası autoplay devam etsin
+            delay: 4000,
+            disableOnInteraction: false,
         },
         pagination: {
             el: ".swiper-pagination",
@@ -75,4 +41,3 @@
         },
     });
 </script>
-

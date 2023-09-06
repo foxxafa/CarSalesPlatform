@@ -1,4 +1,4 @@
-﻿using Application.DTOs.User.UpdateUserDTO;
+﻿using Application.DTOs.User.UserDTO;
 using Application.Results;
 using Domain.Entities.Identity;
 using MediatR;

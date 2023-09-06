@@ -1,5 +1,5 @@
 ﻿using Application.DTOs.Token;
-using Application.DTOs.User.UpdateUserDTO;
+using Application.DTOs.User.UserDTO;
 using Application.Results;
 using MediatR;
 

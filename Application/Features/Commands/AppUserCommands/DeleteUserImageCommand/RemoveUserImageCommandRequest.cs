@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Application.Features.Commands.AppUserCommands.DeleteUserImageCommand
 {
-    public class DeleteUserImageCommandRequest : IRequest<Result>
+    public class RemoveUserImageCommandRequest : IRequest<Result>
     {
         public string UserId { get; set; }
     }
